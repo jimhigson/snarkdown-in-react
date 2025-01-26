@@ -2,52 +2,28 @@
   <img src="https://cdn.jsdelivr.net/emojione/assets/svg/1f63c.svg" width="256" height="256" alt="Snarkdown">
 </p>
 <h1 align="center">
-  Snarkdown
+  Snarkdown in React
   <a href="https://www.npmjs.org/package/snarkdown">
     <img src="https://img.shields.io/npm/v/snarkdown.svg?style=flat" alt="npm">
   </a>
 </h1>
 
-Snarkdown is a dead simple **1kb** [Markdown] parser.
+Fork of [snarkdown](https://github.com/developit/snarkdown) that renders to jsx components
+(not a html string).
 
-It's designed to be as minimal as possible, for constrained use-cases where a full Markdown parser would be inappropriate.
+Forked primarily to handle the online manual in my game [Head over Heels Online](https://blockstack.ing)
 
+* passes all tests from snarkdown, but tests are in vitest (not mocha/chai)
 
-## Features
+Like Snarkdown:
 
-- **Fast:** since it's basically one regex and a huge if statement
-- **Tiny:** it's 1kb of gzipped ES3
-- **Simple:** pass a Markdown string, get back an HTML string
+* a dead simple **1kb** [Markdown] parser.
+* It's designed to be as minimal as possible, for constrained use-cases where a full Markdown parser would be inappropriate.
+* Does not provide any xss protection whatsoever. Use when markdown is coming from a source you trust (like your own repo)
 
-> **Note:** Tables are not yet supported. If you love impossible to read regular expressions, submit a PR!
->
-> **Note on XSS:** Snarkdown [doesn't sanitize HTML](https://github.com/developit/snarkdown/issues/70), since its primary target usage doesn't require it.
-
-## Demos & Examples
-
-- ⚛️ [**Snarky**](https://snarky.surge.sh) - markdown editor built with Preact & Snarkdown
-- ✏️ [**Simple Markdown Editor**](http://jsfiddle.net/developit/828w6t1x/)
-
-
-## Usage
-
-Snarkdown exports a single function, which parses a string of Markdown and returns a String of HTML. Couldn't be simpler.
-
-The snarkdown module is available in [every module format](https://unpkg.com/snarkdown/dist/) you'd ever need: ES Modules, CommonJS, UMD...
-
-```js
-import snarkdown from 'snarkdown';
-
-let md = '_this_ is **easy** to `use`.';
-let html = snarkdown(md);
-console.log(html);
-// <em>this</em> is <strong>easy</strong> to <code>use</code>.
-```
-
-### Add-ons and Libraries
-
-- For Webpack users, [`snarkdown-loader`](https://github.com/Plugin-contrib/snarkdown-loader) renders markdown files to html.
-
-
-
-[Markdown]: http://daringfireball.net/projects/markdown/
+Unlike upstream Snarkdown:
+* returns jsx that it creates directly (never creates a html string)
+* assumes you have a modern (circa 2025) workflow
+* is in typescript
+* doesn't bother building to cjs or javascript. Use via the npm package repository, and typescript+es only
+* in fact, doesn't have any build whatsoever. The typescript file is the main. If you're not using typescript and want to add a build to js, feel free to raise a PR

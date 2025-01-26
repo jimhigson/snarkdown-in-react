@@ -1,73 +1,33 @@
 {
-  "name": "snarkdown",
-  "description": "Transform Markdown into HTML.",
+  "name": "snarkdown-in-react",
+  "description": "Transform Markdown into React components.",
   "version": "2.0.0",
-  "main": "./dist/snarkdown.js",
-  "module": "./dist/snarkdown.es.js",
-  "modern": "./dist/snarkdown.modern.js",
-  "umd:main": "./dist/snarkdown.umd.js",
-  "unpkg": "./dist/snarkdown.umd.js",
-  "types": "./snarkdown.d.ts",
+  "main": "./src/snarkdown-in-react.tsx",
   "scripts": {
-    "build": "microbundle",
-    "dev": "microbundle watch",
-    "test": "eslint src test && NODE_ENV=test mocha --compilers @babel/register",
-    "prepublish": "npm run -s build",
-    "release": "npm run -s build && npm test && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish"
+    "test": "vitest"
   },
   "authors": [
-    "Jason Miller <jason@developit.ca>"
+    "Jason Miller (snarkdown) <jason@developit.ca>",
+    "Jim Higson (snarkdown-in-react) <jim@blockstack.ing>"
   ],
   "files": [
-    "src",
-    "dist",
-    "snarkdown.d.ts"
+    "src"
   ],
-  "homepage": "https://github.com/developit/snarkdown",
-  "repository": "developit/snarkdown",
+  "homepage": "https://github.com/jimhigson/snarkdown-in-react",
+  "repository": "snarkdown-in-react",
   "license": "MIT",
   "keywords": [
     "markdown",
     "gfm",
     "md",
     "html",
-    "parser"
+    "parser",
+    "jsx",
+    "react"
   ],
-  "devDependencies": {
-    "@babel/preset-env": "^7.11.5",
-    "@babel/register": "^7.11.5",
-    "chai": "^3.5.0",
-    "eslint": "^7.7.0",
-    "eslint-config-developit": "^1.2.0",
-    "microbundle": "^0.12.0",
-    "mocha": "^5.1.1",
-    "npm-merge-driver-install": "^1.1.1"
-  },
-  "eslintConfig": {
-    "extends": "developit",
-    "env": {
-      "browser": true,
-      "mocha": true,
-      "node": true,
-      "es6": true
-    },
-    "globals": {
-      "expect": true
-    },
-    "rules": {
-      "jest/valid-expect": 0,
-      "no-console": 1,
-      "no-cond-assign": 0,
-      "no-regex-spaces": 0
-    }
-  },
-  "babel": {
-    "env": {
-      "test": {
-        "presets": [
-          "@babel/preset-env"
-        ]
-      }
-    }
+  "dependencies": {
+    "react": "^19.0.0",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.4"
   }
 }

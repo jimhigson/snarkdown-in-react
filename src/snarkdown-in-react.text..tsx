@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import snarkdown from '../src';
+import snarkdown from './snarkdown-in-react';
 
 describe('snarkdown()', () => {
 	describe('text formatting', () => {
