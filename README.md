@@ -22,9 +22,10 @@ Forked primarily to handle the online manual in my game [Head over Heels Online]
 # Like Snarkdown:
 
 * a dead simple **1kb** [Markdown] parser.
+* has no run-time dependencies (it depends on `@types/react` to get typescript types to validate against but has no dependency on `react`)
 * It's designed to be as minimal as possible, for constrained use-cases where a full Markdown parser would be inappropriate.
 * Does not provide any xss protection whatsoever. Use when markdown is coming from a source you trust (like your own repo)
-* passes all tests from snarkdown
+* passes all tests from snarkdown (well, all that still apply)
 
 # Unlike upstream Snarkdown:
 

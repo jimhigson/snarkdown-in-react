@@ -1,14 +1,7 @@
-import { AnchorHTMLAttributes, ElementType, Fragment, FunctionComponent, JSX, PropsWithChildren, type ReactElement } from 'react';
+import { Fragment, type FunctionComponent, type ReactElement } from 'react';
 
-const Components = {
-	'': 'em',
-	_: 'strong',
-	'*': 'strong',
-	'~': 's',
-	'\n': 'br',
-	' ': 'br',
-	'-': 'hr'
-} as const;
+const elementSymbol = Symbol.for('react.element');
+const fragmentSymbol = Symbol.for('react.fragment');
 
 /** Outdent a string based on the first indented line's leading whitespace
  *	@private
@@ -17,22 +10,15 @@ function outdent(str: string) {
 	return str.replace(RegExp('^' + (str.match(/^(\t| )+/) || '')[0], 'gm'), '');
 }
 
-/** Encode special attribute characters to HTML entities in a String.
- *	@private
- */
-function encodeAttr(str: string) {
-	return (str + '').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
-
 const isBlockLevel = (node: ReactElement | string | undefined) => {
 	return node && typeof node !== 'string' && ['div', 'ul', 'ol', 'pre'].includes(node.type as string);
 }
 
-type Children = (ReactElement | string)[];
-type ReactElementWithChildren = ReactElement<{ children: Children }>;
+type Children = (ReactElementWithChildren | string)[];
+export type ReactElementWithChildren = ReactElement<{ children: Children }>;
 const makeReactElement = (Component: string | FunctionComponent, children: Children = [], props: object = {}) => {
 	return {
-		$$typeof: Symbol.for('react.element'),
+		$$typeof: elementSymbol,
 		type: Component,
 		props: { ...props, children },
 		key: null
@@ -72,8 +58,8 @@ export default function parse(md: string, prevLinks: Record<string, string> = {}
 	}
 	const closeNode = (Component: string | FunctionComponent) => {
 		const closesIndex = context.findIndex((node) => node.type === Component);
-		context = context.slice(0, closesIndex + 1);
-		currentNode = context[context.length - 1];
+		context = context.slice(0, closesIndex);
+		currentNode = context.at(-1)!;
 	}
 
 	while ((token = tokenizer.exec(md))) {
@@ -89,25 +75,43 @@ export default function parse(md: string, prevLinks: Record<string, string> = {}
 			// escaped
 		}
 		// Code/Indent blocks:
+		// token[2] is language given after backticks like ```this
+		// token[3] is the content inside the backticks ```
+		// token[4] is the content of block indented with \t, including the \t
 		else if (t = (token[3] || token[4])) {
-			chunk = '<pre class="code ' + (token[4] ? 'poetry' : token[2].toLowerCase()) + '"><code' + (token[2] ? ` class="language-${token[2].toLowerCase()}"` : '') + '>' + outdent(encodeAttr(t).replace(/^\n+|\n+$/g, '')) + '</code></pre>';
+			pushNode('pre',
+				[
+					token[4] ? outdent(t) :
+						makeReactElement(
+							'code',
+							[outdent(t)],
+							token[2] ? { language: `language-${token[2].toLowerCase()}` } : {}
+						)
+				],
+				{},
+				false
+			);
 		}
-		// > Quotes, -* lists:
+		// > Blockquotes, -* lists:
 		// token[5] is all the (multi-line) bullets and text like: '* text 1\n* text 2'
 		// token[6] is the bullet like '*', '-', '+', '1.'
 		else if (token[6]) {
-			const bullet = token[6] as '*' | '-' | '+' | `${number}.`;
+			const bullet = token[6] as '*' | '-' | '+' | '>' | `${number}.`;
+			const isList = bullet !== '>';
 			const isNumbered = !!bullet.match(/\./);
-			const listTag = isNumbered ? 'ol' : 'ul';
+			const listTag = isList ? isNumbered ? 'ol' : 'ul' : 'blockquote';
 
+			const lines = token[5]
+				.split('\n')
+				// remove bullets
+				.map(l => l.replace(/^(\*|-|\+|>|\d+\.)\s+/, ''));
 			// note that ul/ol can only be direct children of the root node:
 			const listEle = makeReactElement(
 				listTag,
-				token[5]
-					.split('\n')
-					// remove bullets
-					.map(l => l.replace(/^(\*|-|\+|\d+\.)\s+/, ''))
-					.map(mdLine => makeReactElement('li', parse(mdLine).props.children)),
+				isList
+					? lines.map(mdLine => makeReactElement('li', parse(mdLine).props.children))
+					// blockquotes can have lists inside them, so parse again with the > removed, as a single string:
+					: parse(lines.join('\n')).props.children,
 				{}
 			);
 			rootNode.props.children.push(listEle);
@@ -146,9 +150,11 @@ export default function parse(md: string, prevLinks: Record<string, string> = {}
 		else if (token[13]) {
 			pushNode('h1', parse(token[12]).props.children, {}, false);
 		}
-		// `code`:
+		// `inline code`:
+		// token[16] is the text inside the backticks
 		else if (token[16]) {
-			chunk = '<code>' + encodeAttr(token[16]) + '</code>';
+			// no need to encode 
+			pushNode('code', [token[16]], {}, false);
 		}
 		// Inline formatting: *em*, **strong** & friends
 		// token[17] is the inline formatting character '*', '**', '_', '__' etc
@@ -179,6 +185,10 @@ export default function parse(md: string, prevLinks: Record<string, string> = {}
 			context = [rootNode, openingPara];
 			currentNode = openingPara;
 		}
+		// token[1] is horizontal rule \n\n---\n
+		else if (token[1]) {
+			pushNode('hr', [], {}, false);
+		}
 		else if (token[17]) {
 			const components = {
 				'**': 'strong',
@@ -196,8 +206,20 @@ export default function parse(md: string, prevLinks: Record<string, string> = {}
 		}
 	}
 
-	// push the text after all token - either to the root node or the current paragraph:
-	(currentNode.type === 'div' ? currentNode : rootNode).props.children.push(md.substring(last));
+	// push the text after all token - either to the root node or the last paragraph:
+	const lastChildOfRoot = rootNode.props.children.at(-1);
+	((lastChildOfRoot?.type === 'div' ? lastChildOfRoot : rootNode) as ReactElementWithChildren)
+		.props
+		.children
+		.push(md.substring(last));
+
+	// filter out empty paragraphs (when creating a paragraph, there's no way to know if it will
+	// get content or not
+	rootNode.props.children = rootNode.props.children.filter((child) =>
+		typeof child === 'string' ||
+		child.type !== 'div' ||
+		child.props.children?.length > 0
+	);
 
 	return rootNode;
 }

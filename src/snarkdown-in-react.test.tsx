@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest'
-import snarkdown from './snarkdown-in-react';
+import snarkdown, { ReactElementWithChildren } from './snarkdown-in-react';
 
-describe('snarkdown()', () => {
-	describe.only('text formatting', () => {
-		it('parses bold with **', () => {
-			expect(snarkdown('I **like** tiny libraries')).toMatchInlineSnapshot(`
+
+describe.only('text formatting', () => {
+	it('parses bold with **', () => {
+		expect(snarkdown('I **like** tiny libraries')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  I 
 				  <strong>
@@ -13,58 +13,74 @@ describe('snarkdown()', () => {
 				   tiny libraries
 				</React.Fragment>
 			`);
-		});
-
-		it('parses bold with __', () => {
-			expect(snarkdown('I __like__ tiny libraries')).to.toMatchInlineSnapshot(`
-				<React.Fragment>
-				  I 
-				  <strong>
-				    like
-				  </strong>
-				   tiny libraries
-				</React.Fragment>
-			`);
-		});
-
-		it('parses italics with *', () => {
-			expect(snarkdown('I *like* tiny libraries')).to.toMatchInlineSnapshot(`
-				<React.Fragment>
-				  I 
-				  <em>
-				    like
-				  </em>
-				   tiny libraries
-				</React.Fragment>
-			`);
-		});
-
-		it('parses italics with _', () => {
-			expect(snarkdown('I _like_ tiny libraries')).to.toMatchInlineSnapshot(`
-				<React.Fragment>
-				  I 
-				  <em>
-				    like
-				  </em>
-				   tiny libraries
-				</React.Fragment>
-			`);
-		});
 	});
 
-	describe.only('titles', () => {
-		it('parses H1 titles', () => {
-			expect(snarkdown('# I like tiny libraries')).toMatchInlineSnapshot(`
+	it('parses bold with __', () => {
+		expect(snarkdown('I __like__ tiny libraries')).to.toMatchInlineSnapshot(`
+				<React.Fragment>
+				  I 
+				  <strong>
+				    like
+				  </strong>
+				   tiny libraries
+				</React.Fragment>
+			`);
+	});
+
+	it('parses italics with *', () => {
+		expect(snarkdown('I *like* tiny libraries')).to.toMatchInlineSnapshot(`
+				<React.Fragment>
+				  I 
+				  <em>
+				    like
+				  </em>
+				   tiny libraries
+				</React.Fragment>
+			`);
+	});
+
+	it.only('parses two italics on a line *', () => {
+		expect(snarkdown('I *like* really *tiny* libraries')).to.toMatchInlineSnapshot(`
+				<React.Fragment>
+				  I 
+				  <em>
+				    like
+				  </em>
+				   really 
+				  <em>
+				    tiny
+				  </em>
+				   libraries
+				</React.Fragment>
+			`);
+	});
+
+	it('parses italics with _', () => {
+		expect(snarkdown('I _like_ tiny libraries')).to.toMatchInlineSnapshot(`
+				<React.Fragment>
+				  I 
+				  <em>
+				    like
+				  </em>
+				   tiny libraries
+				</React.Fragment>
+			`);
+	});
+});
+
+describe.only('titles', () => {
+	it('parses H1 titles', () => {
+		expect(snarkdown('# I like tiny libraries')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <h1>
 				    I like tiny libraries
 				  </h1>
 				</React.Fragment>
 			`);
-		});
+	});
 
-		it('parses H1 titles with text after them', () => {
-			expect(snarkdown('# I like tiny libraries\ntiny means small')).toMatchInlineSnapshot(`
+	it('parses H1 titles with text after them', () => {
+		expect(snarkdown('# I like tiny libraries\ntiny means small')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <h1>
 				    I like tiny libraries
@@ -72,10 +88,10 @@ describe('snarkdown()', () => {
 				  tiny means small
 				</React.Fragment>
 			`);
-		});
+	});
 
-		it('parses H1 titles with em in them', () => {
-			expect(snarkdown('# I like *tiny* libraries\ntiny means small')).toMatchInlineSnapshot(`
+	it('parses H1 titles with em in them', () => {
+		expect(snarkdown('# I like *tiny* libraries\ntiny means small')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <h1>
 				    I like 
@@ -87,20 +103,20 @@ describe('snarkdown()', () => {
 				  tiny means small
 				</React.Fragment>
 			`);
-		});
+	});
 
-		it('parses underlined H1 titles', () => {
-			expect(snarkdown('I like tiny libraries\n===')).toMatchInlineSnapshot(`
+	it('parses underlined H1 titles', () => {
+		expect(snarkdown('I like tiny libraries\n===')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <h1>
 				    I like tiny libraries
 				  </h1>
 				</React.Fragment>
 			`);
-		});
+	});
 
-		it('parses underlined H1 titles with em', () => {
-			expect(snarkdown('I like *tiny* libraries\n===')).toMatchInlineSnapshot(`
+	it('parses underlined H1 titles with em', () => {
+		expect(snarkdown('I like *tiny* libraries\n===')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <h1>
 				    I like 
@@ -111,38 +127,38 @@ describe('snarkdown()', () => {
 				  </h1>
 				</React.Fragment>
 			`);
-		});
+	});
 
-		it('parses H2 titles', () => {
-			expect(snarkdown('## I like tiny libraries')).toMatchInlineSnapshot(`
+	it('parses H2 titles', () => {
+		expect(snarkdown('## I like tiny libraries')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <h2>
 				    I like tiny libraries
 				  </h2>
 				</React.Fragment>
 			`);
-		});
+	});
 
-		it('parses H3 titles', () => {
-			expect(snarkdown('### I like tiny libraries')).toMatchInlineSnapshot(`
+	it('parses H3 titles', () => {
+		expect(snarkdown('### I like tiny libraries')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <h3>
 				    I like tiny libraries
 				  </h3>
 				</React.Fragment>
 			`);
-		});
-
-		it.skip('parses titles with reference links', () => {
-			expect(
-				snarkdown('# I like [tiny libraries]\n\n[tiny libraries]: https://github.com/developit/snarkdown')
-			).to.equal('<h1>I like <a href="https://github.com/developit/snarkdown">tiny libraries</a></h1>');
-		});
 	});
 
-	describe('links & images', () => {
-		it.only('parses links', () => {
-			expect(snarkdown('[Snarkdown](http://github.com/developit/snarkdown)')).toMatchInlineSnapshot(`
+	it.skip('parses titles with reference links', () => {
+		expect(
+			snarkdown('# I like [tiny libraries]\n\n[tiny libraries]: https://github.com/developit/snarkdown')
+		).to.equal('<h1>I like <a href="https://github.com/developit/snarkdown">tiny libraries</a></h1>');
+	});
+});
+
+describe('links & images', () => {
+	it.only('parses links', () => {
+		expect(snarkdown('[Snarkdown](http://github.com/developit/snarkdown)')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <a
 				    href="http://github.com/developit/snarkdown"
@@ -151,10 +167,10 @@ describe('snarkdown()', () => {
 				  </a>
 				</React.Fragment>
 			`);
-		});
+	});
 
-		it.only('parses anchor links', () => {
-			expect(snarkdown('[Example](#example)')).toMatchInlineSnapshot(`
+	it.only('parses anchor links', () => {
+		expect(snarkdown('[Example](#example)')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <a
 				    href="#example"
@@ -163,10 +179,10 @@ describe('snarkdown()', () => {
 				  </a>
 				</React.Fragment>
 			`);
-		});
+	});
 
-		it.only('parses images with a title', () => {
-			expect(snarkdown('![title](foo.png)')).toMatchInlineSnapshot(`
+	it.only('parses images with a title', () => {
+		expect(snarkdown('![title](foo.png)')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <img
 				    alt="title"
@@ -174,9 +190,9 @@ describe('snarkdown()', () => {
 				  />
 				</React.Fragment>
 			`);
-		});
-		it.only('parses images with no title', () => {
-			expect(snarkdown('![](foo.png)')).toMatchInlineSnapshot(`
+	});
+	it.only('parses images with no title', () => {
+		expect(snarkdown('![](foo.png)')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <img
 				    alt=""
@@ -184,10 +200,10 @@ describe('snarkdown()', () => {
 				  />
 				</React.Fragment>
 			`);
-		});
+	});
 
-		it.only('parses images within links', () => {
-			expect(snarkdown('[![](toc.png)](#toc)')).toMatchInlineSnapshot(`
+	it.only('parses images within links', () => {
+		expect(snarkdown('[![](toc.png)](#toc)')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <a
 				    href="#toc"
@@ -199,7 +215,7 @@ describe('snarkdown()', () => {
 				  </a>
 				</React.Fragment>
 			`);
-			expect(snarkdown('[![a](a.png)](#a) [![b](b.png)](#b)')).toMatchInlineSnapshot(`
+		expect(snarkdown('[![a](a.png)](#a) [![b](b.png)](#b)')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <a
 				    href="#b"
@@ -218,20 +234,20 @@ describe('snarkdown()', () => {
 				  </a>
 				</React.Fragment>
 			`);
-		});
-
-		it.skip('parses reference links', () => {
-			expect(snarkdown('\nhello [World]!\n[world]: http://world.com')).to.equal('hello <a href="http://world.com">World</a>!');
-		});
-
-		it.skip('parses reference links without creating excessive linebreaks', () => {
-			expect(snarkdown('\nhello [World]!\n\n[world]: http://world.com')).to.equal('hello <a href="http://world.com">World</a>!');
-		});
 	});
 
-	describe('lists', () => {
-		it.only('parses an unordered list with *', () => {
-			expect(snarkdown('* One\n* Two')).toMatchInlineSnapshot(`
+	it.skip('parses reference links', () => {
+		expect(snarkdown('\nhello [World]!\n[world]: http://world.com')).to.equal('hello <a href="http://world.com">World</a>!');
+	});
+
+	it.skip('parses reference links without creating excessive linebreaks', () => {
+		expect(snarkdown('\nhello [World]!\n\n[world]: http://world.com')).to.equal('hello <a href="http://world.com">World</a>!');
+	});
+});
+
+describe('lists', () => {
+	it.only('parses an unordered list with *', () => {
+		expect(snarkdown('* One\n* Two')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <ul>
 				    <li>
@@ -243,10 +259,10 @@ describe('snarkdown()', () => {
 				  </ul>
 				</React.Fragment>
 			`);
-		});
+	});
 
-		it.only('parses an unordered list with -', () => {
-			expect(snarkdown('- One\n- Two')).toMatchInlineSnapshot(`
+	it.only('parses an unordered list with -', () => {
+		expect(snarkdown('- One\n- Two')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <ul>
 				    <li>
@@ -258,10 +274,10 @@ describe('snarkdown()', () => {
 				  </ul>
 				</React.Fragment>
 			`);
-		});
+	});
 
-		it.only('parses an unordered list with +', () => {
-			expect(snarkdown('+ One\n+ Two')).toMatchInlineSnapshot(`
+	it.only('parses an unordered list with +', () => {
+		expect(snarkdown('+ One\n+ Two')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <ul>
 				    <li>
@@ -273,10 +289,10 @@ describe('snarkdown()', () => {
 				  </ul>
 				</React.Fragment>
 			`);
-		});
+	});
 
-		it.only('parses an unordered list with mixed bullet point styles', () => {
-			expect(snarkdown('+ One\n* Two\n- Three')).toMatchInlineSnapshot(`
+	it.only('parses an unordered list with mixed bullet point styles', () => {
+		expect(snarkdown('+ One\n* Two\n- Three')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <ul>
 				    <li>
@@ -291,10 +307,10 @@ describe('snarkdown()', () => {
 				  </ul>
 				</React.Fragment>
 			`);
-		});
+	});
 
-		it.only('parses an ordered list', () => {
-			expect(snarkdown('1. Ordered\n2. Lists\n4. Numbers are ignored')).toMatchInlineSnapshot(`
+	it.only('parses an ordered list', () => {
+		expect(snarkdown('1. Ordered\n2. Lists\n4. Numbers are ignored')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <ol>
 				    <li>
@@ -309,12 +325,53 @@ describe('snarkdown()', () => {
 				  </ol>
 				</React.Fragment>
 			`);
-		});
+	});
+});
+
+describe('line breaks', () => {
+	it.only('parses two new lines as line breaks', () => {
+		expect(snarkdown('Something with\n\na line break')).toMatchInlineSnapshot(`
+				<React.Fragment>
+				  <div
+				    className="paragraph"
+				  >
+				    Something with
+				  </div>
+				  <div
+				    className="paragraph"
+				  >
+				    a line break
+				  </div>
+				</React.Fragment>
+			`);
 	});
 
-	describe('line breaks', () => {
-		it.only('parses two new lines as line breaks', () => {
-			expect(snarkdown('Something with\n\na line break')).toMatchInlineSnapshot(`
+	it.only('parses strong and em inside paragraphs', () => {
+		expect(snarkdown('Something *with*\n\na **line** break')).toMatchInlineSnapshot(`
+				<React.Fragment>
+				  <div
+				    className="paragraph"
+				  >
+				    Something 
+				    <em>
+				      with
+				    </em>
+				  </div>
+				  <div
+				    className="paragraph"
+				  >
+				    a 
+				    <strong>
+				      line
+				    </strong>
+				     break
+				  </div>
+				</React.Fragment>
+			`);
+	});
+
+	it.only('parses two spaces as a line break', () => {
+		expect(snarkdown('Something with  \na line break')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <div
 				    className="paragraph"
@@ -328,28 +385,11 @@ describe('snarkdown()', () => {
 				  </div>
 				</React.Fragment>
 			`);
-		});
+	});
 
-		it.only('parses two spaces as a line break', () => {
-			expect(snarkdown('Something with  \na line break')).toMatchInlineSnapshot(`
-				<React.Fragment>
-				  <div
-				    className="paragraph"
-				  >
-				    Something with
-				  </div>
-				  <div
-				    className="paragraph"
-				  >
-				    a line break
-				  </div>
-				</React.Fragment>
-			`);
-		});
-
-		it.only('parses two line breaks between lists', () => {
-			expect(snarkdown(
-				`* a
+	it.only('parses two line breaks between lists', () => {
+		expect(snarkdown(
+			`* a
 * b
 
 * a
@@ -363,9 +403,6 @@ describe('snarkdown()', () => {
         b
       </li>
     </ul>
-    <div
-      className="paragraph"
-    />
     <ul>
       <li>
         a
@@ -376,10 +413,10 @@ describe('snarkdown()', () => {
     </ul>
   </React.Fragment>
 `);
-		});
-		it.only('parses two paragraphs between lists', () => {
-			expect(snarkdown(
-				`* a
+	});
+	it.only('parses two paragraphs between lists', () => {
+		expect(snarkdown(
+			`* a
 * b
 
 one line
@@ -407,9 +444,6 @@ another line
     >
       another line
     </div>
-    <div
-      className="paragraph"
-    />
     <ul>
       <li>
         a
@@ -420,70 +454,213 @@ another line
     </ul>
   </React.Fragment>
 `);
-		});
+	});
+});
+
+describe('code & quotes', () => {
+	it.only('parses inline code', () => {
+		expect(snarkdown('Here is some code `var a = 1`.')).toMatchInlineSnapshot(`
+				<React.Fragment>
+				  Here is some code 
+				  <code>
+				    var a = 1
+				  </code>
+				  .
+				</React.Fragment>
+			`);
 	});
 
-	describe('code & quotes', () => {
-		it('parses inline code', () => {
-			expect(snarkdown('Here is some code `var a = 1`.')).to.equal('Here is some code <code>var a = 1</code>.');
-		});
-
-		it('escapes inline code', () => {
-			expect(snarkdown('a `<">` b')).to.equal('a <code>&lt;&quot;&gt;</code> b');
-		});
-
-		it('parses three backtricks (```) as a code block', () => {
-			expect(snarkdown('```\nfunction codeBlocks() {\n\treturn "Can be inserted";\n}\n```')).to.equal('<pre class="code "><code>function codeBlocks() {\n\treturn &quot;Can be inserted&quot;;\n}</code></pre>');
-
-			expect(snarkdown('```js\nfunction codeBlocks() {\n\treturn "Can be inserted";\n}\n```')).to.equal('<pre class="code js"><code class="language-js">function codeBlocks() {\n\treturn &quot;Can be inserted&quot;;\n}</code></pre>');
-		});
-
-		it('parses tabs as a code poetry block', () => {
-			expect(snarkdown('\tvar a = 1')).to.equal('<pre class="code poetry"><code>var a = 1</code></pre>');
-		});
-
-		it('escapes code/quote blocks', () => {
-			expect(snarkdown('```\n<foo>\n```')).to.equal('<pre class="code "><code>&lt;foo&gt;</code></pre>');
-			expect(snarkdown('\t<foo>')).to.equal('<pre class="code poetry"><code>&lt;foo&gt;</code></pre>');
-		});
-
-		it('parses a block quote', () => {
-			expect(snarkdown('> To be or not to be')).to.equal('<blockquote>To be or not to be</blockquote>');
-		});
-
-		it('parses lists within block quotes', () => {
-			expect(snarkdown('> - one\n> - two\n> - **three**\nhello')).to.equal('<blockquote><ul><li>one</li><li>two</li><li><strong>three</strong></li></ul></blockquote>\nhello');
-		});
+	//it('escapes inline code', () => {
+	// this test does not apply - snarkdown needed this for html output no need to escape in react virtual dom nodes
+	// however, vitest will render the inline snapshot as using &gt;
+	it.only('does not escape inline code', () => {
+		const result = snarkdown('Here is some code `if( a > 1 )`');
+		expect(result).toMatchInlineSnapshot(`
+				<React.Fragment>
+				  Here is some code 
+				  <code>
+				    if( a &gt; 1 )
+				  </code>
+				</React.Fragment>
+			`);
+		// see, it really isn't escaped!
+		expect((result.props.children[1] as ReactElementWithChildren).props.children[0]).toBe('if( a > 1 )');
 	});
 
-	describe('horizontal rules', () => {
-		it('should parse ---', () => {
-			expect(snarkdown('foo\n\n---\nbar')).to.equal('foo<hr />bar');
-			expect(snarkdown('foo\n\n----\nbar'), '----').to.equal('foo<hr />bar');
-			expect(snarkdown('> foo\n\n---\nbar')).to.equal('<blockquote>foo</blockquote><hr />bar');
-		});
+	it.only('parses three backticks (```) as a code block', () => {
+		expect(snarkdown('```\nfunction codeBlocks() {\n\treturn "Can be inserted";\n}\n```'))
+			.toMatchInlineSnapshot(`
+					<React.Fragment>
+					  <pre>
+					    <code>
+					      function codeBlocks() {
+						return "Can be inserted";
+					}
+					    </code>
+					  </pre>
+					</React.Fragment>
+				`);
 
-		it('should parse * * *', () => {
-			expect(snarkdown('foo\n* * *\nbar')).to.equal('foo<hr />bar');
-			expect(snarkdown('foo\n* * * *\nbar'), '* * * *').to.equal('foo<hr />bar');
-			expect(snarkdown('> foo\n\n* * *\nbar')).to.equal('<blockquote>foo</blockquote><hr />bar');
-		});
+	});
+	it.only('parses three backticks with language (```js) as a code block', () => {
+		expect(snarkdown('```js\nfunction codeBlocks() {\n\treturn "Can be inserted";\n}\n```')).toMatchInlineSnapshot(`
+				<React.Fragment>
+				  <pre>
+				    <code
+				      language="language-js"
+				    >
+				      function codeBlocks() {
+					return "Can be inserted";
+				}
+				    </code>
+				  </pre>
+				</React.Fragment>
+			`);
 	});
 
-	describe('edge cases', () => {
-		it('should close unclosed tags', () => {
-			expect(snarkdown('*foo')).to.equal('<em>foo</em>');
-			expect(snarkdown('foo**')).to.equal('foo<strong></strong>');
-			expect(snarkdown('[some **bold text](#winning)')).to.equal('<a href="#winning">some <strong>bold text</strong></a>');
-			expect(snarkdown('`foo')).to.equal('`foo');
-		});
+	it.only('parses tabs as a code poetry block', () => {
+		expect(snarkdown('\tvar a = 1')).toMatchInlineSnapshot(`
+				<React.Fragment>
+				  <pre>
+				    var a = 1
+				  </pre>
+				</React.Fragment>
+			`);
+	});
 
-		it('should not choke on single characters', () => {
-			expect(snarkdown('*')).to.equal('<em></em>');
-			expect(snarkdown('_')).to.equal('<em></em>');
-			expect(snarkdown('**')).to.equal('<strong></strong>');
-			expect(snarkdown('>')).to.equal('>');
-			expect(snarkdown('`')).to.equal('`');
-		});
+	/*
+	escaping not needed for react virtual dom:
+	it('escapes code/quote blocks', () => {
+		expect(snarkdown('```\n<foo>\n```')).to.equal('<pre class="code "><code>&lt;foo&gt;</code></pre>');
+		expect(snarkdown('\t<foo>')).to.equal('<pre class="code poetry"><code>&lt;foo&gt;</code></pre>');
+	});
+	*/
+
+	it.only('parses a block quote', () => {
+		expect(snarkdown('> To be or not to be')).toMatchInlineSnapshot(`
+				<React.Fragment>
+				  <blockquote>
+				    To be or not to be
+				  </blockquote>
+				</React.Fragment>
+			`);
+	});
+
+	it.only('parses a multi-line block quote', () => {
+		expect(snarkdown('> To be or not to be\n> well, it\'s a question innit?')).toMatchInlineSnapshot(`
+				<React.Fragment>
+				  <blockquote>
+				    To be or not to be
+				well, it's a question innit?
+				  </blockquote>
+				</React.Fragment>
+			`);
+	});
+
+	it.only('parses lists within block quotes', () => {
+		expect(snarkdown('> - one\n> - two\n> - **three**\nhello')).toMatchInlineSnapshot(`
+				<React.Fragment>
+				  <blockquote>
+				    <ul>
+				      <li>
+				        one
+				      </li>
+				      <li>
+				        two
+				      </li>
+				      <li>
+				        <strong>
+				          three
+				        </strong>
+				      </li>
+				    </ul>
+				  </blockquote>
+				  
+				hello
+				</React.Fragment>
+			`);
+	});
+
+	it.only('parses em within blockquotes', () => {
+		// emphasis mine (for the test)
+		expect(snarkdown('> Not *everything* that is faced can be changed, but *nothing* can be changed until it is faced.')).toMatchInlineSnapshot(`
+				<React.Fragment>
+				  <blockquote>
+				    Not 
+				    <em>
+				      everything
+				    </em>
+				     that is faced can be changed, but 
+				    <em>
+				      nothing
+				    </em>
+				     can be changed until it is faced.
+				  </blockquote>
+				</React.Fragment>
+			`);
+	});
+});
+
+describe('horizontal rules', () => {
+	it.only('should parse --- as a <hr/>', () => {
+		expect(snarkdown('foo\n\n---\nbar')).toMatchInlineSnapshot(`
+			<React.Fragment>
+			  foo
+			  <hr />
+			  bar
+			</React.Fragment>
+		`);
+		expect(snarkdown('> foo\n\n---\nbar')).toMatchInlineSnapshot(`
+			<React.Fragment>
+			  <blockquote>
+			    foo
+			  </blockquote>
+			  <hr />
+			  bar
+			</React.Fragment>
+		`);
+	});
+
+	it.only('should parse * * * as a <hr/>', () => {
+		expect(snarkdown('foo\n* * *\nbar')).toMatchInlineSnapshot(`
+			<React.Fragment>
+			  foo
+			  <hr />
+			  bar
+			</React.Fragment>
+		`);
+		expect(snarkdown('foo\n* * * *\nbar'), '* * * *').toMatchInlineSnapshot(`
+			<React.Fragment>
+			  foo
+			  <hr />
+			  bar
+			</React.Fragment>
+		`);
+		expect(snarkdown('> foo\n\n* * *\nbar')).toMatchInlineSnapshot(`
+			<React.Fragment>
+			  <blockquote>
+			    foo
+			  </blockquote>
+			  <hr />
+			  bar
+			</React.Fragment>
+		`);
+	});
+});
+
+describe('edge cases', () => {
+	it('should close unclosed tags', () => {
+		expect(snarkdown('*foo')).to.equal('<em>foo</em>');
+		expect(snarkdown('foo**')).to.equal('foo<strong></strong>');
+		expect(snarkdown('[some **bold text](#winning)')).to.equal('<a href="#winning">some <strong>bold text</strong></a>');
+		expect(snarkdown('`foo')).to.equal('`foo');
+	});
+
+	it('should not choke on single characters', () => {
+		expect(snarkdown('*')).to.equal('<em></em>');
+		expect(snarkdown('_')).to.equal('<em></em>');
+		expect(snarkdown('**')).to.equal('<strong></strong>');
+		expect(snarkdown('>')).to.equal('>');
+		expect(snarkdown('`')).to.equal('`');
 	});
 });
