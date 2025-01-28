@@ -377,6 +377,50 @@ describe('snarkdown()', () => {
   </React.Fragment>
 `);
 		});
+		it.only('parses two paragraphs between lists', () => {
+			expect(snarkdown(
+				`* a
+* b
+
+one line
+
+another line
+
+* a
+* b`)).toMatchInlineSnapshot(`
+  <React.Fragment>
+    <ul>
+      <li>
+        a
+      </li>
+      <li>
+        b
+      </li>
+    </ul>
+    <div
+      className="paragraph"
+    >
+      one line
+    </div>
+    <div
+      className="paragraph"
+    >
+      another line
+    </div>
+    <div
+      className="paragraph"
+    />
+    <ul>
+      <li>
+        a
+      </li>
+      <li>
+        b
+      </li>
+    </ul>
+  </React.Fragment>
+`);
+		});
 	});
 
 	describe('code & quotes', () => {

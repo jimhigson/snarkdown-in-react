@@ -169,19 +169,15 @@ export default function parse(md: string, prevLinks: Record<string, string> = {}
 				// if there are contents before the \n\n that aren't already block level, put them
 				// into a div:
 				if (lastBlockLevelIndex !== rootNode.props.children.length - 1) {
-					const firstParaContents = rootNode.props.children.splice(lastBlockLevelIndex + 1)
-					rootNode.props.children.push(makeReactElement('div', firstParaContents, { className: 'paragraph' }));
+					const scoopedUpPreviousContent = rootNode.props.children.splice(lastBlockLevelIndex + 1)
+					rootNode.props.children.push(makeReactElement('div', scoopedUpPreviousContent, { className: 'paragraph' }));
 				}
-				context = [rootNode];
-				// push a new div and keep it open:
-				pushNode('div', [], { className: 'paragraph' });
-			} else {
-				// already in a paragraph:
-				// close the current paragraph
-				closeNode('div');
-				// open the next one:
-				pushNode('div', [], { className: 'paragraph' });
 			}
+
+			const openingPara = makeReactElement('div', [], { className: 'paragraph' });
+			rootNode.props.children.push(openingPara);
+			context = [rootNode, openingPara];
+			currentNode = openingPara;
 		}
 		else if (token[17]) {
 			const components = {
