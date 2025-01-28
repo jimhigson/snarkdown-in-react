@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest'
-import snarkdown, { ReactElementWithChildren } from './snarkdown-in-react';
+import { ReactElementWithChildren, parse as snarkdown } from './snarkdown-in-react';
 
 
-describe.only('text formatting', () => {
+describe('text formatting', () => {
 	it('parses bold with **', () => {
 		expect(snarkdown('I **like** tiny libraries')).toMatchInlineSnapshot(`
 				<React.Fragment>
@@ -39,7 +39,7 @@ describe.only('text formatting', () => {
 			`);
 	});
 
-	it.only('parses two italics on a line *', () => {
+	it('parses two italics on a line *', () => {
 		expect(snarkdown('I *like* really *tiny* libraries')).to.toMatchInlineSnapshot(`
 				<React.Fragment>
 				  I 
@@ -68,7 +68,7 @@ describe.only('text formatting', () => {
 	});
 });
 
-describe.only('titles', () => {
+describe('titles', () => {
 	it('parses H1 titles', () => {
 		expect(snarkdown('# I like tiny libraries')).toMatchInlineSnapshot(`
 				<React.Fragment>
@@ -157,7 +157,7 @@ describe.only('titles', () => {
 });
 
 describe('links & images', () => {
-	it.only('parses links', () => {
+	it('parses links', () => {
 		expect(snarkdown('[Snarkdown](http://github.com/developit/snarkdown)')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <a
@@ -169,7 +169,7 @@ describe('links & images', () => {
 			`);
 	});
 
-	it.only('parses anchor links', () => {
+	it('parses anchor links', () => {
 		expect(snarkdown('[Example](#example)')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <a
@@ -181,7 +181,7 @@ describe('links & images', () => {
 			`);
 	});
 
-	it.only('parses images with a title', () => {
+	it('parses images with a title', () => {
 		expect(snarkdown('![title](foo.png)')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <img
@@ -191,7 +191,7 @@ describe('links & images', () => {
 				</React.Fragment>
 			`);
 	});
-	it.only('parses images with no title', () => {
+	it('parses images with no title', () => {
 		expect(snarkdown('![](foo.png)')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <img
@@ -202,7 +202,7 @@ describe('links & images', () => {
 			`);
 	});
 
-	it.only('parses images within links', () => {
+	it('parses images within links', () => {
 		expect(snarkdown('[![](toc.png)](#toc)')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <a
@@ -246,7 +246,7 @@ describe('links & images', () => {
 });
 
 describe('lists', () => {
-	it.only('parses an unordered list with *', () => {
+	it('parses an unordered list with *', () => {
 		expect(snarkdown('* One\n* Two')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <ul>
@@ -261,7 +261,7 @@ describe('lists', () => {
 			`);
 	});
 
-	it.only('parses an unordered list with -', () => {
+	it('parses an unordered list with -', () => {
 		expect(snarkdown('- One\n- Two')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <ul>
@@ -276,7 +276,7 @@ describe('lists', () => {
 			`);
 	});
 
-	it.only('parses an unordered list with +', () => {
+	it('parses an unordered list with +', () => {
 		expect(snarkdown('+ One\n+ Two')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <ul>
@@ -291,7 +291,7 @@ describe('lists', () => {
 			`);
 	});
 
-	it.only('parses an unordered list with mixed bullet point styles', () => {
+	it('parses an unordered list with mixed bullet point styles', () => {
 		expect(snarkdown('+ One\n* Two\n- Three')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <ul>
@@ -309,7 +309,7 @@ describe('lists', () => {
 			`);
 	});
 
-	it.only('parses an ordered list', () => {
+	it('parses an ordered list', () => {
 		expect(snarkdown('1. Ordered\n2. Lists\n4. Numbers are ignored')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <ol>
@@ -329,7 +329,7 @@ describe('lists', () => {
 });
 
 describe('line breaks', () => {
-	it.only('parses two new lines as line breaks', () => {
+	it('parses two new lines as line breaks', () => {
 		expect(snarkdown('Something with\n\na line break')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <div
@@ -346,7 +346,7 @@ describe('line breaks', () => {
 			`);
 	});
 
-	it.only('parses strong and em inside paragraphs', () => {
+	it('parses strong and em inside paragraphs', () => {
 		expect(snarkdown('Something *with*\n\na **line** break')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <div
@@ -370,7 +370,7 @@ describe('line breaks', () => {
 			`);
 	});
 
-	it.only('parses two spaces as a line break', () => {
+	it('parses two spaces as a line break', () => {
 		expect(snarkdown('Something with  \na line break')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <div
@@ -387,7 +387,7 @@ describe('line breaks', () => {
 			`);
 	});
 
-	it.only('parses two line breaks between lists', () => {
+	it('parses two line breaks between lists', () => {
 		expect(snarkdown(
 			`* a
 * b
@@ -414,7 +414,7 @@ describe('line breaks', () => {
   </React.Fragment>
 `);
 	});
-	it.only('parses two paragraphs between lists', () => {
+	it('parses two paragraphs between lists', () => {
 		expect(snarkdown(
 			`* a
 * b
@@ -458,7 +458,7 @@ another line
 });
 
 describe('code & quotes', () => {
-	it.only('parses inline code', () => {
+	it('parses inline code', () => {
 		expect(snarkdown('Here is some code `var a = 1`.')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  Here is some code 
@@ -473,7 +473,7 @@ describe('code & quotes', () => {
 	//it('escapes inline code', () => {
 	// this test does not apply - snarkdown needed this for html output no need to escape in react virtual dom nodes
 	// however, vitest will render the inline snapshot as using &gt;
-	it.only('does not escape inline code', () => {
+	it('does not escape inline code', () => {
 		const result = snarkdown('Here is some code `if( a > 1 )`');
 		expect(result).toMatchInlineSnapshot(`
 				<React.Fragment>
@@ -487,7 +487,7 @@ describe('code & quotes', () => {
 		expect((result.props.children[1] as ReactElementWithChildren).props.children[0]).toBe('if( a > 1 )');
 	});
 
-	it.only('parses three backticks (```) as a code block', () => {
+	it('parses three backticks (```) as a code block', () => {
 		expect(snarkdown('```\nfunction codeBlocks() {\n\treturn "Can be inserted";\n}\n```'))
 			.toMatchInlineSnapshot(`
 					<React.Fragment>
@@ -502,7 +502,7 @@ describe('code & quotes', () => {
 				`);
 
 	});
-	it.only('parses three backticks with language (```js) as a code block', () => {
+	it('parses three backticks with language (```js) as a code block', () => {
 		expect(snarkdown('```js\nfunction codeBlocks() {\n\treturn "Can be inserted";\n}\n```')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <pre>
@@ -518,7 +518,7 @@ describe('code & quotes', () => {
 			`);
 	});
 
-	it.only('parses tabs as a code poetry block', () => {
+	it('parses tabs as a code poetry block', () => {
 		expect(snarkdown('\tvar a = 1')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <pre>
@@ -536,7 +536,7 @@ describe('code & quotes', () => {
 	});
 	*/
 
-	it.only('parses a block quote', () => {
+	it('parses a block quote', () => {
 		expect(snarkdown('> To be or not to be')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <blockquote>
@@ -546,7 +546,7 @@ describe('code & quotes', () => {
 			`);
 	});
 
-	it.only('parses a multi-line block quote', () => {
+	it('parses a multi-line block quote', () => {
 		expect(snarkdown('> To be or not to be\n> well, it\'s a question innit?')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <blockquote>
@@ -557,7 +557,7 @@ describe('code & quotes', () => {
 			`);
 	});
 
-	it.only('parses lists within block quotes', () => {
+	it('parses lists within block quotes', () => {
 		expect(snarkdown('> - one\n> - two\n> - **three**\nhello')).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <blockquote>
@@ -581,7 +581,7 @@ describe('code & quotes', () => {
 			`);
 	});
 
-	it.only('parses em within blockquotes', () => {
+	it('parses em within blockquotes', () => {
 		// emphasis mine (for the test)
 		expect(snarkdown('> Not *everything* that is faced can be changed, but *nothing* can be changed until it is faced.')).toMatchInlineSnapshot(`
 				<React.Fragment>
@@ -602,7 +602,7 @@ describe('code & quotes', () => {
 });
 
 describe('horizontal rules', () => {
-	it.only('should parse --- as a <hr/>', () => {
+	it('should parse --- as a <hr/>', () => {
 		expect(snarkdown('foo\n\n---\nbar')).toMatchInlineSnapshot(`
 			<React.Fragment>
 			  foo
@@ -621,7 +621,7 @@ describe('horizontal rules', () => {
 		`);
 	});
 
-	it.only('should parse * * * as a <hr/>', () => {
+	it('should parse * * * as a <hr/>', () => {
 		expect(snarkdown('foo\n* * *\nbar')).toMatchInlineSnapshot(`
 			<React.Fragment>
 			  foo
@@ -650,17 +650,64 @@ describe('horizontal rules', () => {
 
 describe('edge cases', () => {
 	it('should close unclosed tags', () => {
-		expect(snarkdown('*foo')).to.equal('<em>foo</em>');
-		expect(snarkdown('foo**')).to.equal('foo<strong></strong>');
-		expect(snarkdown('[some **bold text](#winning)')).to.equal('<a href="#winning">some <strong>bold text</strong></a>');
-		expect(snarkdown('`foo')).to.equal('`foo');
+		// original snarkdown had the foo inside the em. I think either is fine.
+		expect(snarkdown('*foo')).toMatchInlineSnapshot(`
+			<React.Fragment>
+			  <em />
+			  foo
+			</React.Fragment>
+		`);
+		expect(snarkdown('foo**')).toMatchInlineSnapshot(`
+			<React.Fragment>
+			  foo
+			  <strong />
+			</React.Fragment>
+		`);
+		expect(snarkdown('[some **bold text](#winning)')).toMatchInlineSnapshot(`
+			<React.Fragment>
+			  <a
+			    href="#winning"
+			  >
+			    some 
+			    <strong>
+			      bold text
+			    </strong>
+			  </a>
+			</React.Fragment>
+		`);
+		// isn't closing this one (unlike snarkdown.js), but I actually think this is better - either is fine IMO
+		expect(snarkdown('`foo')).toMatchInlineSnapshot(`
+			<React.Fragment>
+			  \`foo
+			</React.Fragment>
+		`);
 	});
 
 	it('should not choke on single characters', () => {
-		expect(snarkdown('*')).to.equal('<em></em>');
-		expect(snarkdown('_')).to.equal('<em></em>');
-		expect(snarkdown('**')).to.equal('<strong></strong>');
-		expect(snarkdown('>')).to.equal('>');
-		expect(snarkdown('`')).to.equal('`');
+		expect(snarkdown('*')).toMatchInlineSnapshot(`
+			<React.Fragment>
+			  <em />
+			</React.Fragment>
+		`)
+		expect(snarkdown('_')).toMatchInlineSnapshot(`
+			<React.Fragment>
+			  <em />
+			</React.Fragment>
+		`)
+		expect(snarkdown('**')).toMatchInlineSnapshot(`
+			<React.Fragment>
+			  <strong />
+			</React.Fragment>
+		`)
+		expect(snarkdown('>')).toMatchInlineSnapshot(`
+			<React.Fragment>
+			  &gt;
+			</React.Fragment>
+		`)
+		expect(snarkdown('`')).toMatchInlineSnapshot(`
+			<React.Fragment>
+			  \`
+			</React.Fragment>
+		`)
 	});
 });

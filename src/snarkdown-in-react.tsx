@@ -1,4 +1,4 @@
-import { Fragment, type FunctionComponent, type ReactElement } from 'react';
+import { type FunctionComponent, type ReactElement } from 'react';
 
 const elementSymbol = Symbol.for('react.element');
 const fragmentSymbol = Symbol.for('react.fragment');
@@ -11,12 +11,12 @@ function outdent(str: string) {
 }
 
 const isBlockLevel = (node: ReactElement | string | undefined) => {
-	return node && typeof node !== 'string' && ['div', 'ul', 'ol', 'pre'].includes(node.type as string);
+	return node && typeof node !== 'string' && ['div', 'ul', 'ol', 'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(node.type as string);
 }
 
 type Children = (ReactElementWithChildren | string)[];
 export type ReactElementWithChildren = ReactElement<{ children: Children }>;
-const makeReactElement = (Component: string | FunctionComponent, children: Children = [], props: object = {}) => {
+const makeReactElement = (Component: string | FunctionComponent | typeof fragmentSymbol, children: Children = [], props: object = {}) => {
 	return {
 		$$typeof: elementSymbol,
 		type: Component,
@@ -26,19 +26,12 @@ const makeReactElement = (Component: string | FunctionComponent, children: Child
 }
 
 /** Parse Markdown into an HTML String. */
-export default function parse(md: string, prevLinks: Record<string, string> = {}): ReactElementWithChildren {
+export function parse(md: string): ReactElementWithChildren {
 	let tokenizer = /((?:^|\n+)(?:\n---+|\* \*(?: \*)+)\n)|(?:^``` *(\w*)\n([\s\S]*?)\n```$)|((?:(?:^|\n+)(?:\t|  {2,}).+)+\n*)|((?:(?:^|\n)([>*+-]|\d+\.)\s+.*)+)|(?:!\[([^\]]*?)\]\(([^)]+?)\))|(\[)|(\](?:\(([^)]+?)\))?)|(?:(?:^|\n+)([^\s].*)\n(-{3,}|={3,})(?:\n+|$))|(?:(?:^|\n+)(#{1,6})\s*(.+)(?:\n+|$))|(?:`([^`].*?)`)|(  \n\n*|\n{2,}|__|\*\*|[_*]|~~)/gm;
-
-	let links: Record<string, string> = { ...prevLinks };
-
-	md = md.replace(/^\[(.+?)\]:\s*(.+)$/gm, (s, name, url) => {
-		links[name.toLowerCase()] = url;
-		return '';
-	}).replace(/^\n+|\n+$/g, '');
 
 	let last = 0;
 
-	const rootNode = makeReactElement(Fragment);
+	const rootNode = makeReactElement(fragmentSymbol);
 	let currentNode = rootNode;
 	let context: ReactElementWithChildren[] = [currentNode];
 	let token: RegExpMatchArray | null;
@@ -66,7 +59,6 @@ export default function parse(md: string, prevLinks: Record<string, string> = {}
 		// everything from the end of teh last token to the start of this one
 		const prev = md.substring(last, token.index);
 		last = tokenizer.lastIndex;
-		let t: string;
 
 		if (prev !== '')
 			currentNode.props.children.push(prev);
@@ -78,13 +70,13 @@ export default function parse(md: string, prevLinks: Record<string, string> = {}
 		// token[2] is language given after backticks like ```this
 		// token[3] is the content inside the backticks ```
 		// token[4] is the content of block indented with \t, including the \t
-		else if (t = (token[3] || token[4])) {
+		else if ((token[3] || token[4])) {
 			pushNode('pre',
 				[
-					token[4] ? outdent(t) :
+					token[4] ? outdent(token[4]) :
 						makeReactElement(
 							'code',
-							[outdent(t)],
+							[outdent(token[3])],
 							token[2] ? { language: `language-${token[2].toLowerCase()}` } : {}
 						)
 				],

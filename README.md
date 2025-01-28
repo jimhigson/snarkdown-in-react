@@ -26,6 +26,7 @@ Forked primarily to handle the online manual in my game [Head over Heels Online]
 * It's designed to be as minimal as possible, for constrained use-cases where a full Markdown parser would be inappropriate.
 * Does not provide any xss protection whatsoever. Use when markdown is coming from a source you trust (like your own repo)
 * passes all tests from snarkdown (well, all that still apply)
+* doesn't support tables
 
 # Unlike upstream Snarkdown:
 
@@ -35,6 +36,7 @@ Forked primarily to handle the online manual in my game [Head over Heels Online]
 * doesn't bother building to cjs or javascript. Use via the npm package repository, and typescript+es only
 * in fact, doesn't have any build whatsoever. The typescript file is the main. If you're not using typescript and want to add a build to js, feel free to raise a PR
 * tests are in vitest (not mocha/chai)
+* doesn't support reference links - I hardly ever see these being used
 
 double line breaks like this:
 ```markdown
