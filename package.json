@@ -5,7 +5,7 @@
   "main": "./src/snarkdown-in-react.tsx",
   "scripts": {
     "test": "vitest",
-    "build": "esbuild src/snarkdown-in-react.ts --outfile=dist/snarkdown-in-react.js --minify"
+    "build": "esbuild src/snarkdown-in-react.tsx --outfile=dist/snarkdown-in-react.js --minify"
   },
   "authors": [
     "Jason Miller (snarkdown) <jason@developit.ca>",

@@ -7,6 +7,38 @@ import {
   PropsWithChildren,
 } from "react";
 
+const defaultComponents = {
+  "": Fragment,
+  pre: "pre" as
+    | string
+    | FunctionComponent<PropsWithChildren<Record<any, never>>>,
+  code: "code" as string | FunctionComponent<{ language: string }>,
+  ol: "ol" as string | FunctionComponent<PropsWithChildren<Record<any, never>>>,
+  ul: "ul" as string | FunctionComponent<PropsWithChildren<Record<any, never>>>,
+  hr: "hr" as string | FunctionComponent<PropsWithChildren<Record<any, never>>>,
+  blockquote: "blockquote" as
+    | string
+    | FunctionComponent<PropsWithChildren<Record<any, never>>>,
+  li: "li" as string | FunctionComponent<PropsWithChildren<Record<any, never>>>,
+  a: "a" as string | FunctionComponent<PropsWithChildren<{ href: string }>>,
+  img: "img" as string | FunctionComponent<{ src: string; alt: string }>,
+  h1: "h1" as string | FunctionComponent<PropsWithChildren<Record<any, never>>>,
+  h2: "h2" as string | FunctionComponent<PropsWithChildren<Record<any, never>>>,
+  h3: "h3" as string | FunctionComponent<PropsWithChildren<Record<any, never>>>,
+  h4: "h4" as string | FunctionComponent<PropsWithChildren<Record<any, never>>>,
+  h5: "h5" as string | FunctionComponent<PropsWithChildren<Record<any, never>>>,
+  h6: "h6" as string | FunctionComponent<PropsWithChildren<Record<any, never>>>,
+  div: "div" as
+    | string
+    | FunctionComponent<PropsWithChildren<Record<any, never>>>,
+  em: "em" as string | FunctionComponent<PropsWithChildren<Record<any, never>>>,
+  strong: "strong" as
+    | string
+    | FunctionComponent<PropsWithChildren<Record<any, never>>>,
+} as const;
+
+type CustomComponentsOption = Partial<typeof defaultComponents>;
+
 /** Outdent a string based on the first indented line's leading whitespace
  *	@private
  */
@@ -30,13 +62,13 @@ const isBlockLevel = (node: ReactLikeElement | string | undefined) => {
  * react elements at the end.
  */
 export type ReactLikeElement = {
-  type: string | FunctionComponent<PropsWithChildren<object>>;
+  type: keyof typeof defaultComponents;
   children: Children;
   props: Record<string, string>;
 };
 type Children = (ReactLikeElement | string)[];
 const createReactLikeElement = (
-  type: string | FunctionComponent<PropsWithChildren<object>>,
+  type: keyof typeof defaultComponents,
   children: Children | ReactLikeElement | string = [],
   props: Record<string, string> = {}
 ): ReactLikeElement => {
@@ -172,7 +204,7 @@ export const parseImpl = (md: string): ReactLikeElement => {
     // token[12] is the text of the heading on the line before '==='
     // token[13] is '===' (on the line below the text)
     else if (token[14]) {
-      const tagName = "h" + token[14].length;
+      const tagName = ("h" + token[14].length) as `h${1 | 2 | 3 | 4 | 5 | 6}`;
       pushNode(
         createReactLikeElement(tagName, parseImpl(token[15]).children),
         false
@@ -233,20 +265,13 @@ export const parseImpl = (md: string): ReactLikeElement => {
     else if (token[1]) {
       pushNode(createReactLikeElement("hr"), false);
     } else if (token[17]) {
-      const components = {
-        "**": "strong",
-        __: "strong",
-        "*": "em",
-        _: "em",
-      };
-      const Component = components[token[17] as keyof typeof components];
-      const closesIndex = contextPath.findIndex(
-        (node) => node.type === Component
-      );
+      /** token[17] is *, **, _, __ for strong/em */
+      const tag = token[17].length === 2 ? "strong" : "em";
+      const closesIndex = contextPath.findIndex((node) => node.type === tag);
       if (closesIndex === -1) {
-        pushNode(createReactLikeElement(Component));
+        pushNode(createReactLikeElement(tag));
       } else {
-        closeNode(Component);
+        closeNode(tag);
       }
     }
   }
@@ -272,9 +297,19 @@ export const parseImpl = (md: string): ReactLikeElement => {
   return rootNode;
 };
 
-export const parse = (md: string): ReactElement => {
+export const parse = (
+  md: string,
+  customComponents: CustomComponentsOption = {}
+): ReactElement => {
+  const components = { ...defaultComponents, ...customComponents };
+
   const convert = (rl: ReactLikeElement, i: number = 0): ReactElement => {
-    const Component = rl.type === "" ? Fragment : rl.type;
+    const Component = (
+      rl.type === "" ? Fragment : components[rl.type]
+    ) as FunctionComponent<PropsWithChildren<any>>;
+
+    console.log("crating element for", rl.type, "with", Component);
+
     return (
       <Component {...rl.props} key={i}>
         {rl.children.map((c, i) => (typeof c === "string" ? c : convert(c, i)))}
@@ -286,6 +321,12 @@ export const parse = (md: string): ReactElement => {
 };
 
 // the component version:
-export const SnarkdownInReact = ({ markdown }: { markdown: string }) => {
-  return useMemo(() => parse(markdown), [markdown]);
+export const SnarkdownInReact = ({
+  markdown,
+  customComponents,
+}: {
+  markdown: string;
+  customComponents?: CustomComponentsOption;
+}): ReactElement => {
+  return parse(markdown, customComponents);
 };

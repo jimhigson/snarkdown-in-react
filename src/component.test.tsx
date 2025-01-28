@@ -5,7 +5,6 @@ import { SnarkdownInReact } from "./snarkdown-in-react";
 /**
  * @vitest-environment jsdom
  */
-
 test("loads and displays greeting", async () => {
   const markdown = `## Guide to using this component
   
