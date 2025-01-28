@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { ReactElementWithChildren, parse as snarkdown } from './snarkdown-in-react';
+import { ReactLikeElement, parse as snarkdown } from './snarkdown-in-react';
 
 
 describe('text formatting', () => {
@@ -484,7 +484,7 @@ describe('code & quotes', () => {
 				</React.Fragment>
 			`);
 		// see, it really isn't escaped!
-		expect((result.props.children[1] as ReactElementWithChildren).props.children[0]).toBe('if( a > 1 )');
+		expect((result.props.children[1] as ReactLikeElement).props.children[0]).toBe('if( a > 1 )');
 	});
 
 	it('parses three backticks (```) as a code block', () => {
