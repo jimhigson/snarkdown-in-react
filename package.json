@@ -1,7 +1,7 @@
 {
   "name": "snarkdown-in-react",
   "description": "Transform Markdown into React components.",
-  "version": "2.0.0",
+  "version": "1.0.0",
   "main": "./src/snarkdown-in-react.tsx",
   "scripts": {
     "test": "vitest",
@@ -15,7 +15,10 @@
     "src"
   ],
   "homepage": "https://github.com/jimhigson/snarkdown-in-react",
-  "repository": "snarkdown-in-react",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com/snarkdown-in-react.git"
+  },
   "license": "MIT",
   "keywords": [
     "markdown",
@@ -32,7 +35,7 @@
   "devDependencies": {
     "@testing-library/react": "^16.2.0",
     "@types/react": "^19.0.8",
-    "esbuild": "^0.24.2",    
+    "esbuild": "^0.24.2",
     "typescript": "^5.7.3",
     "vitest": "^3.0.4",
     "jsdom": "^26.0.0",
