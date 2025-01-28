@@ -8,18 +8,19 @@
   </a>
 </h1>
 
-Fork of [snarkdown](https://github.com/developit/snarkdown) that renders to jsx components
+A React Fork of [snarkdown](https://github.com/developit/snarkdown) that renders to jsx components
 (not a html string).
 
-Whereas `snarkdown` is **1kb** minified and gzipped, by working with react and allowing custom rendering, I make the library a bit larger, at **1.4kb**.
+Whereas `snarkdown` is **1kb** minified and gzipped, `snarkdown-in-react` is a little larger, at **1.4kb** (all in, no external dependencies). For that you get custom rendering and easy use in React.
 
-Created originally to handle the online manual in my game [Head over Heels Online](https://blockstack.ing)
+I created `snarkdown-in-react` originally to handle the online manual in my game [Head over Heels Online](https://blockstack.ing)
 
 # Use case:
 
 - You want to show some markdown in your react app
 - You don't need MDX (react components inline in the markdown)
 - You don't want to inflate your bundle size
+- You may (or may not) need custom rendering, but don't need to inject custom parsing.
 
 # API
 
@@ -30,23 +31,23 @@ const MyComponent = () => {
   return <SnarkdownInReact markdown={myMarkdown} />;
 };
 
-const MyComponentWithCustomMarkdownRendering = () => {
-  // memoise components list
+const myCustomRenderers = {
+  // default rendering for em is <em> - this example overrides it with <span class="em">
+  em: ({ children }) => <span className="em">{children}</span>,
 
+  // wrap images in a div with a click handler and some tailwind classes:
+  img: ({ children, src, alt }) => (
+    <div className="w-full" onClick={() => console.log("click")}>
+      <img className="scale-2" src={src} alt={alt} />
+    </div>
+  ),
+};
+
+const MyComponentWithCustomMarkdownRendering = () => {
   return (
     <SnarkdownInReact
       markdown={myMarkdown}
-      customComponents={{
-        // default rendering for em is <em> - this example overrides it with <span class="em">
-        em: ({ children }) => <span className="em">{children}</span>,
-
-        // wrap images in a div with a click handler and some tailwind classes:
-        img: ({ children, src, alt }) => (
-          <div className="w-full" onClick={() => console.log("click")}>
-            <img className="scale-2" src={src} alt={alt} />
-          </div>
-        ),
-      }}
+      customComponents={myCustomRenderers}
     />
   );
 };
@@ -67,11 +68,13 @@ const MyComponentWithCustomMarkdownRendering = () => {
 - assumes you have a modern (circa 2025) workflow
 - is in typescript
 - is a little bigger, at 1.4k minified and gzipped
-- doesn't bother building to cjs or javascript. Use via the npm package repository, and typescript+es only
-- in fact, doesn't have any build whatsoever. The typescript file is the main. If you're not using typescript and want to add a build to js, feel free to raise a PR
-- tests are in vitest (not mocha/chai)
-- doesn't support reference links - I hardly ever see these being used
-- is somewhat xss-safe, since raw html is never concatenated and written out (I don't use `.dangerouslySetInnerHtml`). However, resilience against attacks is not a primary design goal.
+- doesn't bother building to cjs or javascript, or push to any cdns. Use via the npm package repository, and typescript+es only
+- in fact, doesn't have any build whatsoever. The typescript file is the main. If you're not using typescript and want to add a build to js, feel free to raise a PR. The `esbuild`-powered `build` task in the `package.json` is purely to keep an eye on the size
+- tests in vitest (not mocha/chai)
+- doesn't support reference links
+- thanks to React, is somewhat xss-safe, since raw html is never concatenated and written out (I don't use `.dangerouslySetInnerHtml`).
+
+## Parsing differences:
 
 double line breaks like this:
 
