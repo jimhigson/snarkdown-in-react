@@ -25,13 +25,16 @@ I created `snarkdown-in-react` originally to handle the online manual in my game
 # API
 
 ```tsx
-import { SnarkdownInReact } from "snarkdown-in-react";
+import {
+  SnarkdownInReact,
+  type CustomComponentsOption,
+} from "snarkdown-in-react";
 
 const MyComponent = () => {
   return <SnarkdownInReact markdown={myMarkdown} />;
 };
 
-const myCustomRenderers = {
+const myCustomRenderers: CustomComponentsOption = {
   // default rendering for em is <em> - this example overrides it with <span class="em">
   em: ({ children }) => <span className="em">{children}</span>,
 
@@ -72,7 +75,8 @@ const MyComponentWithCustomMarkdownRendering = () => {
 - in fact, doesn't have any build whatsoever. The typescript file is the main. If you're not using typescript and want to add a build to js, feel free to raise a PR. The `esbuild`-powered `build` task in the `package.json` is purely to keep an eye on the size
 - tests in vitest (not mocha/chai)
 - doesn't support reference links
-- thanks to React, is somewhat xss-safe, since raw html is never concatenated and written out (I don't use `.dangerouslySetInnerHtml`).
+- doesn't let through raw html in markdown
+- thanks to React (and not supporting html), is somewhat xss-safe, since raw html is never concatenated and written out (I don't use `.dangerouslySetInnerHtml`).
 
 ## Parsing differences:
 

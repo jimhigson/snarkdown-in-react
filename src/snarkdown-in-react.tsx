@@ -37,7 +37,7 @@ const defaultComponents = {
     | FunctionComponent<PropsWithChildren<Record<any, never>>>,
 } as const;
 
-type CustomComponentsOption = Partial<typeof defaultComponents>;
+export type CustomComponentsOption = Partial<typeof defaultComponents>;
 
 /** Outdent a string based on the first indented line's leading whitespace
  *	@private
