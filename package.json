@@ -1,7 +1,7 @@
 {
   "name": "snarkdown-in-react",
   "description": "Transform Markdown into React components.",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "./src/snarkdown-in-react.tsx",
   "scripts": {
     "test": "vitest",

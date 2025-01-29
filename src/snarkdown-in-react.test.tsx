@@ -1,5 +1,5 @@
 import { describe, it, expect, test } from "vitest";
-import { ReactLikeElement, parse as snarkdown } from "./snarkdown-in-react";
+import { ASTNode, parse as snarkdown } from "./snarkdown-in-react";
 import { PropsWithChildren, ReactElement, ReactNode } from "react";
 
 describe("text formatting", () => {

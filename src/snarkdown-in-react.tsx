@@ -3,7 +3,6 @@ import {
   type ReactElement,
   Fragment,
   Children,
-  useMemo,
   PropsWithChildren,
 } from "react";
 
@@ -42,16 +41,16 @@ export type CustomComponentsOption = Partial<typeof defaultComponents>;
 /** Outdent a string based on the first indented line's leading whitespace
  *	@private
  */
-function outdent(str: string) {
+const outdent = (str: string) => {
   return str.replace(RegExp("^" + (str.match(/^(\t| )+/) || "")[0], "gm"), "");
-}
+};
 
-const isBlockLevel = (node: ReactLikeElement | string | undefined) => {
+const isBlockLevel = (node: ASTNode | string | undefined) => {
   return (
     node &&
     typeof node !== "string" &&
     ["div", "ul", "ol", "pre", "h1", "h2", "h3", "h4", "h5", "h6"].includes(
-      node.type as string
+      node.t as string
     )
   );
 };
@@ -61,45 +60,48 @@ const isBlockLevel = (node: ReactLikeElement | string | undefined) => {
  * a different representation that we can modify in-place. Converted to real
  * react elements at the end.
  */
-export type ReactLikeElement = {
-  type: keyof typeof defaultComponents;
-  children: Children;
-  props: Record<string, string>;
+export type ASTNode = {
+  /** type */
+  t: keyof typeof defaultComponents;
+  /** children */
+  c: Children;
+  /** props */
+  p: Record<string, string>;
 };
-type Children = (ReactLikeElement | string)[];
-const createReactLikeElement = (
+type Children = (ASTNode | string)[];
+const createAstNode = (
   type: keyof typeof defaultComponents,
-  children: Children | ReactLikeElement | string = [],
+  children: Children | ASTNode | string = [],
   props: Record<string, string> = {}
-): ReactLikeElement => {
+): ASTNode => {
   return {
-    type,
-    children: Array.isArray(children) ? children : [children],
-    props,
+    t: type,
+    c: Array.isArray(children) ? children : [children],
+    p: props,
   };
 };
 
-export const parseImpl = (md: string): ReactLikeElement => {
+export const parseImpl = (md: string): ASTNode => {
   // original snarkdown unreadable regex :-)
   let tokenizer =
     /((?:^|\n+)(?:\n---+|\* \*(?: \*)+)\n)|(?:^``` *(\w*)\n([\s\S]*?)\n```$)|((?:(?:^|\n+)(?:\t|  {2,}).+)+\n*)|((?:(?:^|\n)([>*+-]|\d+\.)\s+.*)+)|(?:!\[([^\]]*?)\]\(([^)]+?)\))|(\[)|(\](?:\(([^)]+?)\))?)|(?:(?:^|\n+)([^\s].*)\n(-{3,}|={3,})(?:\n+|$))|(?:(?:^|\n+)(#{1,6})\s*(.+)(?:\n+|$))|(?:`([^`].*?)`)|(  \n\n*|\n{2,}|__|\*\*|[_*]|~~)/gm;
 
   let last = 0;
 
-  const rootNode = createReactLikeElement("");
+  const rootNode = createAstNode("");
   let currentNode = rootNode;
   // all nodes on the path from the root down to the current node:
-  let contextPath: ReactLikeElement[] = [currentNode];
+  let contextPath: ASTNode[] = [currentNode];
   let token: RegExpMatchArray | null;
 
   const pushNode = (
-    node: ReactLikeElement,
+    node: ASTNode,
     /** if keep open, the next tokens will be added to the node we just pushed */
     keepOpen: boolean = true
   ) => {
     if (keepOpen) contextPath.push(node);
 
-    currentNode.children.push(node);
+    currentNode.c.push(node);
 
     if (keepOpen) currentNode = node;
 
@@ -107,9 +109,7 @@ export const parseImpl = (md: string): ReactLikeElement => {
   };
 
   const closeNode = (Component: string | FunctionComponent) => {
-    const closesIndex = contextPath.findIndex(
-      (node) => node.type === Component
-    );
+    const closesIndex = contextPath.findIndex((node) => node.t === Component);
     contextPath = contextPath.slice(0, closesIndex);
     currentNode = contextPath.at(-1)!;
   };
@@ -119,7 +119,7 @@ export const parseImpl = (md: string): ReactLikeElement => {
     const prev = md.substring(last, token.index);
     last = tokenizer.lastIndex;
 
-    if (prev !== "") currentNode.children.push(prev);
+    if (prev !== "") currentNode.c.push(prev);
 
     if (prev.match(/[^\\](\\\\)*\\$/)) {
       // escaped
@@ -130,11 +130,11 @@ export const parseImpl = (md: string): ReactLikeElement => {
     // token[4] is the content of block indented with \t, including the \t
     else if (token[3] || token[4]) {
       pushNode(
-        createReactLikeElement(
+        createAstNode(
           "pre",
           token[4]
             ? outdent(token[4])
-            : createReactLikeElement(
+            : createAstNode(
                 "code",
                 outdent(token[3]),
                 token[2]
@@ -159,17 +159,15 @@ export const parseImpl = (md: string): ReactLikeElement => {
         // remove bullets
         .map((l) => l.replace(/^(\*|-|\+|>|\d+\.)\s+/, ""));
       // note that ul/ol can only be direct children of the root node:
-      const listEle = createReactLikeElement(
+      const listEle = createAstNode(
         listTag,
         isList
-          ? lines.map((mdLine) =>
-              createReactLikeElement("li", parseImpl(mdLine).children)
-            )
+          ? lines.map((mdLine) => createAstNode("li", parseImpl(mdLine).c))
           : // blockquotes can have lists inside them, so parse again with the > removed, as a single string:
-            parseImpl(lines.join("\n")).children,
+            parseImpl(lines.join("\n")).c,
         {}
       );
-      rootNode.children.push(listEle);
+      rootNode.c.push(listEle);
       contextPath = [rootNode, listEle];
       currentNode = rootNode;
     }
@@ -178,7 +176,7 @@ export const parseImpl = (md: string): ReactLikeElement => {
     // token[7] is alt text
     else if (token[8]) {
       pushNode(
-        createReactLikeElement("img", [], { src: token[8], alt: token[7] }),
+        createAstNode("img", [], { src: token[8], alt: token[7] }),
         false
       );
     }
@@ -186,17 +184,15 @@ export const parseImpl = (md: string): ReactLikeElement => {
     // token[10] is '](url)'
     // token[11] is the url
     else if (token[10]) {
-      const linkEle = contextPath.find((node) => node.type === "a") as
-        | ReactElement<{ href: string }>
-        | undefined;
+      const linkEle = contextPath.find((node) => node.t === "a");
       if (linkEle) {
-        linkEle.props.href = token[11];
+        linkEle.p.href = token[11];
       }
     }
     // Opening links:
     // token[9] is opening of the link '['
     else if (token[9]) {
-      pushNode(createReactLikeElement("a"));
+      pushNode(createAstNode("a"));
     }
     // # Headings/titles:
     // token[14] is #,##,### etc from the heading
@@ -205,30 +201,24 @@ export const parseImpl = (md: string): ReactLikeElement => {
     // token[13] is '===' (on the line below the text)
     else if (token[14]) {
       const tagName = ("h" + token[14].length) as `h${1 | 2 | 3 | 4 | 5 | 6}`;
-      pushNode(
-        createReactLikeElement(tagName, parseImpl(token[15]).children),
-        false
-      );
+      pushNode(createAstNode(tagName, parseImpl(token[15]).c), false);
     } else if (token[13]) {
-      pushNode(
-        createReactLikeElement("h1", parseImpl(token[12]).children),
-        false
-      );
+      pushNode(createAstNode("h1", parseImpl(token[12]).c), false);
     }
     // `inline code`:
     // token[16] is the text inside the backticks
     else if (token[16]) {
       // no need to encode
-      pushNode(createReactLikeElement("code", token[16]), false);
+      pushNode(createAstNode("code", token[16]), false);
     }
     // Inline formatting: *em*, **strong** & friends
     // token[17] is the inline formatting character '*', '**', '_', '__' etc
     //		OR a paragarph break: '\n\n" or ' \n'
     else if (token[17]?.[0] === "\n" || token[17] === "  \n") {
       // paragraphs can only occur at index 1 of the context path:
-      const hasParagraphOpen: boolean = contextPath[1]?.type === "div";
+      const hasParagraphOpen: boolean = contextPath[1]?.t === "div";
       if (!hasParagraphOpen) {
-        const rootChildren = rootNode.children;
+        const rootChildren = rootNode.c;
         let lastBlockLevelIndex;
         for (
           lastBlockLevelIndex = rootChildren.length - 1;
@@ -242,34 +232,34 @@ export const parseImpl = (md: string): ReactLikeElement => {
 
         // if there are contents before the \n\n that aren't already block level, put them
         // into a div:
-        if (lastBlockLevelIndex !== rootNode.children.length - 1) {
-          const scoopedUpPreviousContent = rootNode.children.splice(
+        if (lastBlockLevelIndex !== rootNode.c.length - 1) {
+          const scoopedUpPreviousContent = rootNode.c.splice(
             lastBlockLevelIndex + 1
           );
-          rootNode.children.push(
-            createReactLikeElement("div", scoopedUpPreviousContent, {
+          rootNode.c.push(
+            createAstNode("div", scoopedUpPreviousContent, {
               className: "paragraph",
             })
           );
         }
       }
 
-      const openingPara = createReactLikeElement("div", [], {
+      const openingPara = createAstNode("div", [], {
         className: "paragraph",
       });
-      rootNode.children.push(openingPara);
+      rootNode.c.push(openingPara);
       contextPath = [rootNode, openingPara];
       currentNode = openingPara;
     }
     // token[1] is horizontal rule \n\n---\n
     else if (token[1]) {
-      pushNode(createReactLikeElement("hr"), false);
+      pushNode(createAstNode("hr"), false);
     } else if (token[17]) {
       /** token[17] is *, **, _, __ for strong/em */
       const tag = token[17].length === 2 ? "strong" : "em";
-      const closesIndex = contextPath.findIndex((node) => node.type === tag);
+      const closesIndex = contextPath.findIndex((node) => node.t === tag);
       if (closesIndex === -1) {
-        pushNode(createReactLikeElement(tag));
+        pushNode(createAstNode(tag));
       } else {
         closeNode(tag);
       }
@@ -277,20 +267,18 @@ export const parseImpl = (md: string): ReactLikeElement => {
   }
 
   // push the text after all token - either to the root node or the last paragraph:
-  const lastChildOfRoot = rootNode.children.at(-1);
+  const lastChildOfRoot = rootNode.c.at(-1);
   (
-    (lastChildOfRoot?.type === "div"
+    ((lastChildOfRoot as ASTNode | undefined)?.t === "div"
       ? lastChildOfRoot
-      : rootNode) as ReactLikeElement
-  ).children.push(md.substring(last));
+      : rootNode) as ASTNode
+  ).c.push(md.substring(last));
 
   // filter out empty paragraphs (when creating a paragraph, there's no way to know if it will
   // get content or not
-  rootNode.children = rootNode.children.filter(
+  rootNode.c = rootNode.c.filter(
     (child) =>
-      typeof child === "string" ||
-      child.type !== "div" ||
-      child.children?.length > 0
+      typeof child === "string" || child.t !== "div" || child.c?.length > 0
   );
 
   // convert our mutable react elements
@@ -303,18 +291,16 @@ export const parse = (
 ): ReactElement => {
   const components = { ...defaultComponents, ...customComponents };
 
-  const convert = (rl: ReactLikeElement, i: number = 0): ReactElement => {
+  const convert = (n: ASTNode, i: number = 0): ReactElement => {
     const Component = (
-      rl.type === "" ? Fragment : components[rl.type]
+      n.t === "" ? Fragment : components[n.t]
     ) as FunctionComponent<PropsWithChildren<any>>;
 
     return (
-      <Component {...rl.props} key={i}>
-        {rl.children.length === 0
+      <Component {...n.p} key={i}>
+        {n.c.length === 0
           ? undefined
-          : rl.children.map((c, i) =>
-              typeof c === "string" ? c : convert(c, i)
-            )}
+          : n.c.map((c, i) => (typeof c === "string" ? c : convert(c, i)))}
       </Component>
     );
   };
