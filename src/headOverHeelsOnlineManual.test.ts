@@ -342,3 +342,121 @@ Head and Heels are joined together, all their abilities are combined.
   </React.Fragment>
 `)
 });
+
+test('theGame.md', () => {
+  expect(parse(`## THE GAME
+
+![](texture-heels.walking.right.2)![](texture-animated-head.idle.towards?float-right&clear-left)Head and Heels have been captured, separated and imprisoned in the castle
+headquarters of Blacktooth. Their cells contain ‘keep fit’ equipment, including
+a wall ladder that Head really must learn to climb.
+
+![](texture-market.wall.fruits.left?bg-pureBlack)![](texture-moonbase.wall.window2.away?bg-pureBlack&float-right) Your job is to get them both
+out of the castle and into the *marketplace* so they can join up again. From
+there, the journey leads to *Moonbase Headquarters*, where you will have to decide
+either to try to escape back to *Freedom* or to be a true hero and teleport to one
+of the slave planets to search for its lost crown!
+
+![](texture-crown.bookworld)To overthrow the dictatorship on any of the slave planets would be a major blow
+to Blacktooth and you could return to Freedom in glory. Of course, Blacktooth
+would probably enslave them again eventually but it would slow down any
+expansion plans for now.
+
+
+![](texture-cyberman.towards?float-right&relative&z-topSprite)![](texture-animated-bubbles.cold?float-right&clear-right&relative&bottom-bottomStackPullup)The populace of Blacktooth are so heavily oppressed
+that they would have to see all four of the slave planets revolt before the
+Blacktooth crown could cause an uprising. ![](texture-animated-turtle.right)This of course would be the ultimate
+accolade, and unfortunately, almost certain suicide.
+
+*> Head Over Heels Manual*`)).toMatchInlineSnapshot(`
+  <React.Fragment>
+    <h2>
+      THE GAME
+    </h2>
+    <div
+      className="paragraph"
+    >
+      <img
+        alt=""
+        src="texture-heels.walking.right.2"
+      />
+      <img
+        alt=""
+        src="texture-animated-head.idle.towards?float-right&clear-left"
+      />
+      Head and Heels have been captured, separated and imprisoned in the castle
+  headquarters of Blacktooth. Their cells contain ‘keep fit’ equipment, including
+  a wall ladder that Head really must learn to climb.
+    </div>
+    <div
+      className="paragraph"
+    >
+      <img
+        alt=""
+        src="texture-market.wall.fruits.left?bg-pureBlack"
+      />
+      <img
+        alt=""
+        src="texture-moonbase.wall.window2.away?bg-pureBlack&float-right"
+      />
+       Your job is to get them both
+  out of the castle and into the 
+      <em>
+        marketplace
+      </em>
+       so they can join up again. From
+  there, the journey leads to 
+      <em>
+        Moonbase Headquarters
+      </em>
+      , where you will have to decide
+  either to try to escape back to 
+      <em>
+        Freedom
+      </em>
+       or to be a true hero and teleport to one
+  of the slave planets to search for its lost crown!
+    </div>
+    <div
+      className="paragraph"
+    >
+      <img
+        alt=""
+        src="texture-crown.bookworld"
+      />
+      To overthrow the dictatorship on any of the slave planets would be a major blow
+  to Blacktooth and you could return to Freedom in glory. Of course, Blacktooth
+  would probably enslave them again eventually but it would slow down any
+  expansion plans for now.
+    </div>
+    <div
+      className="paragraph"
+    >
+      <img
+        alt=""
+        src="texture-cyberman.towards?float-right&relative&z-topSprite"
+      />
+      <img
+        alt=""
+        src="texture-animated-bubbles.cold?float-right&clear-right&relative&bottom-bottomStackPullup"
+      />
+      The populace of Blacktooth are so heavily oppressed
+  that they would have to see all four of the slave planets revolt before the
+  Blacktooth crown could cause an uprising. 
+      <img
+        alt=""
+        src="texture-animated-turtle.right"
+      />
+      This of course would be the ultimate
+  accolade, and unfortunately, almost certain suicide.
+    </div>
+    <div
+      className="paragraph"
+    >
+      <em>
+        &gt; Head Over Heels Manual
+      </em>
+    </div>
+  </React.Fragment>
+`)
+
+});

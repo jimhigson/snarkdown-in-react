@@ -1,5 +1,6 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, test } from "vitest";
 import { ReactLikeElement, parse as snarkdown } from "./snarkdown-in-react";
+import { PropsWithChildren, ReactElement, ReactNode } from "react";
 
 describe("text formatting", () => {
   it("parses bold with **", () => {
@@ -383,7 +384,7 @@ describe("lists", () => {
 });
 
 describe("line breaks", () => {
-  it("parses two new lines as line breaks", () => {
+  it("parses two new lines as paragraph breaks", () => {
     expect(snarkdown("Something with\n\na line break")).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  <div
@@ -398,6 +399,42 @@ describe("line breaks", () => {
 				  </div>
 				</React.Fragment>
 			`);
+  });
+
+  it("parses three new lines as a single paragraph breaks", () => {
+    expect(snarkdown("Something with\n\n\na line break"))
+      .toMatchInlineSnapshot(`
+				<React.Fragment>
+				  <div
+				    className="paragraph"
+				  >
+				    Something with
+				  </div>
+				  <div
+				    className="paragraph"
+				  >
+				    a line break
+				  </div>
+				</React.Fragment>
+      `);
+  });
+
+  it("parses huge gap in the text as a single paragraph breaks", () => {
+    expect(snarkdown("Something with a BIG\n\n\n\n\n\n\n\na line break"))
+      .toMatchInlineSnapshot(`
+        <React.Fragment>
+          <div
+            className="paragraph"
+          >
+            Something with a BIG
+          </div>
+          <div
+            className="paragraph"
+          >
+            a line break
+          </div>
+        </React.Fragment>
+      `);
   });
 
   it("parses strong and em inside paragraphs", () => {
@@ -535,7 +572,13 @@ describe("code & quotes", () => {
   // this test does not apply - snarkdown needed this for html output no need to escape in react virtual dom nodes
   // however, vitest will render the inline snapshot as using &gt;
   it("does not escape inline code", () => {
-    const result = snarkdown("Here is some code `if( a > 1 )`");
+    type ReactElementWithChildren = ReactElement<{
+      children: Array<ReactElementWithChildren>;
+    }>;
+
+    const result = snarkdown(
+      "Here is some code `if( a > 1 )`"
+    ) as ReactElementWithChildren;
     expect(result).toMatchInlineSnapshot(`
 				<React.Fragment>
 				  Here is some code 
@@ -545,9 +588,7 @@ describe("code & quotes", () => {
 				</React.Fragment>
 			`);
     // see, it really isn't escaped!
-    expect(
-      (result.props.children[1] as ReactLikeElement).props.children[0]
-    ).toBe("if( a > 1 )");
+    expect(result.props.children[1].props.children[0]).toBe("if( a > 1 )");
   });
 
   it("parses three backticks (```) as a code block", () => {

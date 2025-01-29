@@ -224,7 +224,7 @@ export const parseImpl = (md: string): ReactLikeElement => {
     // Inline formatting: *em*, **strong** & friends
     // token[17] is the inline formatting character '*', '**', '_', '__' etc
     //		OR a paragarph break: '\n\n" or ' \n'
-    else if (token[17] === "\n\n" || token[17] === "  \n") {
+    else if (token[17]?.[0] === "\n" || token[17] === "  \n") {
       // paragraphs can only occur at index 1 of the context path:
       const hasParagraphOpen: boolean = contextPath[1]?.type === "div";
       if (!hasParagraphOpen) {
@@ -308,11 +308,13 @@ export const parse = (
       rl.type === "" ? Fragment : components[rl.type]
     ) as FunctionComponent<PropsWithChildren<any>>;
 
-    console.log("crating element for", rl.type, "with", Component);
-
     return (
       <Component {...rl.props} key={i}>
-        {rl.children.map((c, i) => (typeof c === "string" ? c : convert(c, i)))}
+        {rl.children.length === 0
+          ? undefined
+          : rl.children.map((c, i) =>
+              typeof c === "string" ? c : convert(c, i)
+            )}
       </Component>
     );
   };
