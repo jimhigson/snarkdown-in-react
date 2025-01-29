@@ -267,12 +267,17 @@ export const parseImpl = (md: string): ASTNode => {
   }
 
   // push the text after all token - either to the root node or the last paragraph:
-  const lastChildOfRoot = rootNode.c.at(-1);
-  (
-    ((lastChildOfRoot as ASTNode | undefined)?.t === "div"
-      ? lastChildOfRoot
-      : rootNode) as ASTNode
-  ).c.push(md.substring(last));
+  // v- if there is any more text left to push:
+  const remaining = md.substring(last).trim();
+  if (remaining.length) {
+    const lastChildOfRoot = rootNode.c.at(-1);
+
+    (
+      ((lastChildOfRoot as ASTNode | undefined)?.t === "div"
+        ? lastChildOfRoot
+        : rootNode) as ASTNode
+    ).c.push(remaining);
+  }
 
   // filter out empty paragraphs (when creating a paragraph, there's no way to know if it will
   // get content or not

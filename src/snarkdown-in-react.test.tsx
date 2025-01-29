@@ -5,67 +5,67 @@ import { PropsWithChildren, ReactElement, ReactNode } from "react";
 describe("text formatting", () => {
   it("parses bold with **", () => {
     expect(snarkdown("I **like** tiny libraries")).toMatchInlineSnapshot(`
-				<React.Fragment>
-				  I 
-				  <strong>
-				    like
-				  </strong>
-				   tiny libraries
-				</React.Fragment>
-			`);
+      <React.Fragment>
+        I 
+        <strong>
+          like
+        </strong>
+        tiny libraries
+      </React.Fragment>
+    `);
   });
 
   it("parses bold with __", () => {
     expect(snarkdown("I __like__ tiny libraries")).to.toMatchInlineSnapshot(`
-				<React.Fragment>
-				  I 
-				  <strong>
-				    like
-				  </strong>
-				   tiny libraries
-				</React.Fragment>
-			`);
+      <React.Fragment>
+        I 
+        <strong>
+          like
+        </strong>
+        tiny libraries
+      </React.Fragment>
+    `);
   });
 
   it("parses italics with *", () => {
     expect(snarkdown("I *like* tiny libraries")).to.toMatchInlineSnapshot(`
-				<React.Fragment>
-				  I 
-				  <em>
-				    like
-				  </em>
-				   tiny libraries
-				</React.Fragment>
-			`);
+      <React.Fragment>
+        I 
+        <em>
+          like
+        </em>
+        tiny libraries
+      </React.Fragment>
+    `);
   });
 
   it("parses two italics on a line *", () => {
     expect(snarkdown("I *like* really *tiny* libraries")).to
       .toMatchInlineSnapshot(`
-				<React.Fragment>
-				  I 
-				  <em>
-				    like
-				  </em>
-				   really 
-				  <em>
-				    tiny
-				  </em>
-				   libraries
-				</React.Fragment>
-			`);
+        <React.Fragment>
+          I 
+          <em>
+            like
+          </em>
+           really 
+          <em>
+            tiny
+          </em>
+          libraries
+        </React.Fragment>
+      `);
   });
 
   it("parses italics with _", () => {
     expect(snarkdown("I _like_ tiny libraries")).to.toMatchInlineSnapshot(`
-				<React.Fragment>
-				  I 
-				  <em>
-				    like
-				  </em>
-				   tiny libraries
-				</React.Fragment>
-			`);
+      <React.Fragment>
+        I 
+        <em>
+          like
+        </em>
+        tiny libraries
+      </React.Fragment>
+    `);
   });
 
   it("can use custom elements for em", () => {
@@ -88,7 +88,7 @@ describe("text formatting", () => {
         <customStrong>
           tiny
         </customStrong>
-         libraries
+        libraries
       </React.Fragment>
     `);
   });
@@ -120,17 +120,17 @@ describe("titles", () => {
   it("parses H1 titles with em in them", () => {
     expect(snarkdown("# I like *tiny* libraries\ntiny means small"))
       .toMatchInlineSnapshot(`
-				<React.Fragment>
-				  <h1>
-				    I like 
-				    <em>
-				      tiny
-				    </em>
-				     libraries
-				  </h1>
-				  tiny means small
-				</React.Fragment>
-			`);
+        <React.Fragment>
+          <h1>
+            I like 
+            <em>
+              tiny
+            </em>
+            libraries
+          </h1>
+          tiny means small
+        </React.Fragment>
+      `);
   });
 
   it("parses underlined H1 titles", () => {
@@ -145,16 +145,16 @@ describe("titles", () => {
 
   it("parses underlined H1 titles with em", () => {
     expect(snarkdown("I like *tiny* libraries\n===")).toMatchInlineSnapshot(`
-				<React.Fragment>
-				  <h1>
-				    I like 
-				    <em>
-				      tiny
-				    </em>
-				     libraries
-				  </h1>
-				</React.Fragment>
-			`);
+      <React.Fragment>
+        <h1>
+          I like 
+          <em>
+            tiny
+          </em>
+          libraries
+        </h1>
+      </React.Fragment>
+    `);
   });
 
   it("parses H2 titles", () => {
@@ -437,29 +437,63 @@ describe("line breaks", () => {
       `);
   });
 
+  it("does not take a line break at the end of a file too seriously", () => {
+    expect(snarkdown("Why\n\nso\n\nserious?\n")).toMatchInlineSnapshot(`
+      <React.Fragment>
+        <div
+          className="paragraph"
+        >
+          Why
+        </div>
+        <div
+          className="paragraph"
+        >
+          so
+        </div>
+        <div
+          className="paragraph"
+        >
+          serious?
+        </div>
+      </React.Fragment>
+    `);
+  });
+  it("does not take double line breaks at the end of a file too seriously", () => {
+    expect(snarkdown("Some text before the end of the doc\n\n"))
+      .toMatchInlineSnapshot(`
+        <React.Fragment>
+          <div
+            className="paragraph"
+          >
+            Some text before the end of the doc
+          </div>
+        </React.Fragment>
+      `);
+  });
+
   it("parses strong and em inside paragraphs", () => {
     expect(snarkdown("Something *with*\n\na **line** break"))
       .toMatchInlineSnapshot(`
-				<React.Fragment>
-				  <div
-				    className="paragraph"
-				  >
-				    Something 
-				    <em>
-				      with
-				    </em>
-				  </div>
-				  <div
-				    className="paragraph"
-				  >
-				    a 
-				    <strong>
-				      line
-				    </strong>
-				     break
-				  </div>
-				</React.Fragment>
-			`);
+        <React.Fragment>
+          <div
+            className="paragraph"
+          >
+            Something 
+            <em>
+              with
+            </em>
+          </div>
+          <div
+            className="paragraph"
+          >
+            a 
+            <strong>
+              line
+            </strong>
+            break
+          </div>
+        </React.Fragment>
+      `);
   });
 
   it("parses two spaces as a line break", () => {
@@ -671,26 +705,25 @@ describe("code & quotes", () => {
   it("parses lists within block quotes", () => {
     expect(snarkdown("> - one\n> - two\n> - **three**\nhello"))
       .toMatchInlineSnapshot(`
-				<React.Fragment>
-				  <blockquote>
-				    <ul>
-				      <li>
-				        one
-				      </li>
-				      <li>
-				        two
-				      </li>
-				      <li>
-				        <strong>
-				          three
-				        </strong>
-				      </li>
-				    </ul>
-				  </blockquote>
-				  
-				hello
-				</React.Fragment>
-			`);
+        <React.Fragment>
+          <blockquote>
+            <ul>
+              <li>
+                one
+              </li>
+              <li>
+                two
+              </li>
+              <li>
+                <strong>
+                  three
+                </strong>
+              </li>
+            </ul>
+          </blockquote>
+          hello
+        </React.Fragment>
+      `);
   });
 
   it("parses em within blockquotes", () => {
@@ -700,20 +733,20 @@ describe("code & quotes", () => {
         "> Not *everything* that is faced can be changed, but *nothing* can be changed until it is faced."
       )
     ).toMatchInlineSnapshot(`
-				<React.Fragment>
-				  <blockquote>
-				    Not 
-				    <em>
-				      everything
-				    </em>
-				     that is faced can be changed, but 
-				    <em>
-				      nothing
-				    </em>
-				     can be changed until it is faced.
-				  </blockquote>
-				</React.Fragment>
-			`);
+      <React.Fragment>
+        <blockquote>
+          Not 
+          <em>
+            everything
+          </em>
+           that is faced can be changed, but 
+          <em>
+            nothing
+          </em>
+          can be changed until it is faced.
+        </blockquote>
+      </React.Fragment>
+    `);
   });
 });
 

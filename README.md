@@ -1,5 +1,6 @@
 <p align="center">
   <img src="https://cdn.jsdelivr.net/emojione/assets/svg/1f63c.svg" width="256" height="256" alt="Snarkdown">
+  <img src="https://static.cdnlogo.com/logos/r/85/react.svg" width="256" height="256" alt="React">
 </p>
 <h1 align="center">
   Snarkdown in React
@@ -8,8 +9,9 @@
   </a>
 </h1>
 
-A React Fork of [snarkdown](https://github.com/developit/snarkdown) that renders to jsx components
-(not a html string).
+Tiny markdown parser for React.
+
+`snarkdown-in-react` is a fork of [snarkdown](https://github.com/developit/snarkdown).
 
 Whereas `snarkdown` is **1kb** minified and gzipped, `snarkdown-in-react` is a little larger, at **1.4kb** (all in, no external dependencies). For that you get custom rendering and easy use in React.
 
@@ -20,7 +22,8 @@ I created `snarkdown-in-react` originally to handle the online manual in my game
 - You want to show some markdown in your react app
 - You don't need MDX (react components inline in the markdown)
 - You don't want to inflate your bundle size
-- You may (or may not) need custom rendering, but don't need to inject custom parsing.
+- You may (or may not) need to render to your own, custom React components
+- You don't need to inject custom parsing
 
 # API
 
@@ -54,9 +57,18 @@ const MyComponentWithCustomMarkdownRendering = () => {
     />
   );
 };
+
+// note that if your markdown is very large, you might want to consider wrapping in useMemo to avoid
+// repeated parsing. For most normal use cases this will not improve performance and may make it worse,
+// and to improve performance it is almost certainly better to address why your app is over-rendering
+import { parse } from "snarkdown-in-react";
+import { useMemo } from "react";
+const MyCachedComponent = PureComponent(() => {
+  return useMemo(() => parse(myMarkdown), [myMarkdown, parse]);
+});
 ```
 
-# Like Snarkdown:
+# Like the upstream Snarkdown:
 
 - a dead simple [Markdown] parser.
 - has no run-time dependencies (except `react` itself)

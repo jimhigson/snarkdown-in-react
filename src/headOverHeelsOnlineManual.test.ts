@@ -217,7 +217,7 @@ There are four types:
         <strong>
           Iron Pills
         </strong>
-         (to make you invulnerable)
+        (to make you invulnerable)
       </li>
       <li>
         <img
@@ -227,7 +227,7 @@ There are four types:
         <strong>
           Jump higher bunny
         </strong>
-         (only works on Heels)
+        (only works on Heels)
       </li>
       <li>
         <img
@@ -237,7 +237,7 @@ There are four types:
         <strong>
           Go faster bunny
         </strong>
-         (only works on slow-moving Head)
+        (only works on slow-moving Head)
       </li>
     </ol>
     <div
@@ -286,25 +286,25 @@ Head and Heels are joined together, all their abilities are combined.
         <em>
           1
         </em>
-         Heels.
+        Heels.
       </li>
       <li>
         <em>
           2
         </em>
-         Head + Heels.
+        Head + Heels.
       </li>
       <li>
         <em>
           3
         </em>
-         Head.
+        Head.
       </li>
       <li>
         <em>
           4
         </em>
-         Head + Heels.
+        Head + Heels.
       </li>
     </ul>
     <div
@@ -317,13 +317,13 @@ Head and Heels are joined together, all their abilities are combined.
         <em>
           1
         </em>
-         Head.
+        Head.
       </li>
       <li>
         <em>
           2
         </em>
-         Heels.
+        Heels.
       </li>
     </ul>
     <div
@@ -459,4 +459,48 @@ accolade, and unfortunately, almost certain suicide.
   </React.Fragment>
 `)
 
+});
+
+test('penitentiary.md', () => {
+  expect(parse(`## PENITENTIARY
+### The empire's prison planet
+
+![](texture-penitentiary.wall.skeleton.left)Millions are imprisoned here. A harsh planet, very mountainous, much climbing,
+skill required.
+
+The worst place is The Pit, try not to fall into it!
+
+*> Head Over Heels Manual*
+`)).toMatchInlineSnapshot(`
+  <React.Fragment>
+    <h2>
+      PENITENTIARY
+    </h2>
+    <h3>
+      The empire's prison planet
+    </h3>
+    <div
+      className="paragraph"
+    >
+      <img
+        alt=""
+        src="texture-penitentiary.wall.skeleton.left"
+      />
+      Millions are imprisoned here. A harsh planet, very mountainous, much climbing,
+  skill required.
+    </div>
+    <div
+      className="paragraph"
+    >
+      The worst place is The Pit, try not to fall into it!
+    </div>
+    <div
+      className="paragraph"
+    >
+      <em>
+        &gt; Head Over Heels Manual
+      </em>
+    </div>
+  </React.Fragment>
+`);
 });
