@@ -68,6 +68,20 @@ const MyCachedComponent = PureComponent(() => {
 });
 ```
 
+## parsing paragraphs
+
+By default, `<p>` is output for paragraphs. This can cause issues if you need to put block-level
+elements inside your markdown. To change to `<div>` (or any other tag) you can do:
+
+```tsx
+return (
+  <SnarkdownInReact
+    markdown={myMarkdown}
+    customComponents={{p: 'div'}}
+  />
+);
+```
+
 # Like the upstream Snarkdown:
 
 - a dead simple [Markdown] parser.
@@ -100,14 +114,12 @@ some text
 some other text
 ```
 
-is parsed to `<div>`s:
+is parsed to `<p>`s:
 
 ```xml
-<div className="paragraph">some text</div>
-<div className="paragraph">some other text</div>
+<p className="paragraph">some text</p>
+<p className="paragraph">some other text</p>
 ```
-
-(`<div>` is are chosen over `<p>` because it can contain any child element)
 
 this is unlike snarkdown which uses `<br />`:
 

@@ -1,11 +1,12 @@
 {
   "name": "snarkdown-in-react",
   "description": "Transform Markdown into React components.",
-  "version": "1.0.4",
+  "version": "2.0.0",
   "main": "./src/snarkdown-in-react.tsx",
   "scripts": {
     "test": "vitest",
-    "build": "esbuild src/snarkdown-in-react.tsx --outfile=dist/snarkdown-in-react.js --minify"
+    "build": "esbuild src/snarkdown-in-react.tsx --outfile=dist/snarkdown-in-react.js --minify",
+    "fix:format": "prettier --experimental-ternaries src --write"
   },
   "authors": [
     "Jason Miller (snarkdown) <jason@developit.ca>",
@@ -36,10 +37,10 @@
     "@testing-library/react": "^16.2.0",
     "@types/react": "^19.0.8",
     "esbuild": "^0.24.2",
-    "typescript": "^5.7.3",
-    "vitest": "^3.0.4",
     "jsdom": "^26.0.0",
-    "prettier": "^3.4.2"
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.4"
   },
   "packageManager": "pnpm@9.15.0+sha512.76e2379760a4328ec4415815bcd6628dee727af3779aaa4c914e3944156c4299921a89f976381ee107d41f12cfa4b66681ca9c718f0668fa0831ed4c6d8ba56c"
 }

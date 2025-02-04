@@ -1,15 +1,14 @@
-
-
 import { expect, test } from "vitest";
-import { parse } from './snarkdown-in-react';
+import { parse } from "./snarkdown-in-react";
 
 // !!!!!!!!!!!!! examples from Head over Heels online, !!!!!!!!!!!!!!!
 // see: https://blockstack.ing to play the game
 // or: https://github.com/jimhigson/head-over-heels-online for the source code
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-test('blacktooth.md', () => {
-    expect(parse(`## BLACKTOOTH
+test("blacktooth.md", () => {
+  expect(
+    parse(`## BLACKTOOTH
 
 ![](texture-blacktooth.wall.armour.left?bg-pureBlack)![](texture-blacktooth.wall.shield.away?bg-pureBlack&float-right)This planet has a large moon with three lunar space stations on it, the larger
 of these, *Moon Station HQ*, is the main teleport center for the empire, with a
@@ -27,20 +26,17 @@ used it as his headquarters. The castle is surrounded by a small market, and
 then a range of impassable mountains. The only way to leave is via teleport to
 one of the three lunar space stations.
 
-*> head over heels manual*`)).toMatchInlineSnapshot(`
+*> head over heels manual*`),
+  ).toMatchInlineSnapshot(`
   <React.Fragment>
     <h2>
       BLACKTOOTH
     </h2>
-    <div
-      className="paragraph"
-    >
+    <p>
       <img
-        alt=""
         src="texture-blacktooth.wall.armour.left?bg-pureBlack"
       />
       <img
-        alt=""
         src="texture-blacktooth.wall.shield.away?bg-pureBlack&float-right"
       />
       This planet has a large moon with three lunar space stations on it, the larger
@@ -50,42 +46,36 @@ one of the three lunar space stations.
       </em>
       , is the main teleport center for the empire, with a
   direct teleport to all the slave planets.
-    </div>
-    <div
-      className="paragraph"
-    >
+    </p>
+    <p>
       Sometime after the Egyptus episode,
   the latest Emperor sent out a craft to find that same strange planet, and after
   much exploration, it was finally located, and the craft landed. However, the
   crew found the people had changed: instead of pyramids they used castles,
   instead of wrapping corpses up in cloth, they wrapped living men in metal and
   then tried to turn them into corpses with sharp metal sticks.
-    </div>
-    <div
-      className="paragraph"
-    >
+    </p>
+    <p>
       <img
-        alt=""
         src="texture-teleporter"
       />
       The Emperor, not to be outdone by his ancestor, built a castle on Blacktooth and
   used it as his headquarters. The castle is surrounded by a small market, and
   then a range of impassable mountains. The only way to leave is via teleport to
   one of the three lunar space stations.
-    </div>
-    <div
-      className="paragraph"
-    >
+    </p>
+    <p>
       <em>
         &gt; head over heels manual
       </em>
-    </div>
+    </p>
   </React.Fragment>
 `);
 });
 
-test('crowns.md', () => {
-    expect(parse(`## CROWNS
+test("crowns.md", () => {
+  expect(
+    parse(`## CROWNS
 
 ![](texture-crown.blacktooth)![](texture-crown.bookworld?float-right)![](texture-crown.egyptus?clear-left)![](texture-crown.penitentiary?float-right&clear-right)![](texture-crown.safari?clear-left)Find a crown and start a revolution. At the beginning of each game, a screen
 showing all five planets with a crown above each will be displayed.
@@ -94,57 +84,48 @@ As each
 crown is collected this screen will be shown again with the appropriate crowns
 in a bright color.
 
-*> head over heels manual*`)).toMatchInlineSnapshot(`
+*> head over heels manual*`),
+  ).toMatchInlineSnapshot(`
   <React.Fragment>
     <h2>
       CROWNS
     </h2>
-    <div
-      className="paragraph"
-    >
+    <p>
       <img
-        alt=""
         src="texture-crown.blacktooth"
       />
       <img
-        alt=""
         src="texture-crown.bookworld?float-right"
       />
       <img
-        alt=""
         src="texture-crown.egyptus?clear-left"
       />
       <img
-        alt=""
         src="texture-crown.penitentiary?float-right&clear-right"
       />
       <img
-        alt=""
         src="texture-crown.safari?clear-left"
       />
       Find a crown and start a revolution. At the beginning of each game, a screen
   showing all five planets with a crown above each will be displayed.
-    </div>
-    <div
-      className="paragraph"
-    >
+    </p>
+    <p>
       As each
   crown is collected this screen will be shown again with the appropriate crowns
   in a bright color.
-    </div>
-    <div
-      className="paragraph"
-    >
+    </p>
+    <p>
       <em>
         &gt; head over heels manual
       </em>
-    </div>
+    </p>
   </React.Fragment>
 `);
 });
 
-test('cuddlyStuffedWhiteRabbits.md', () => {
-    expect(parse(`## CUDDLY STUFFED WHITE RABBITS
+test("cuddlyStuffedWhiteRabbits.md", () => {
+  expect(
+    parse(`## CUDDLY STUFFED WHITE RABBITS
 
 ![](texture-bunny?float-right)The *cute toy bunnies* magically enhance your powers. The status display at the
 bottom of the screen will keep you informed as to which powers are temporarily
@@ -160,16 +141,14 @@ There are four types:
 3. ![](texture-hud.bigJumps?sprite-tinted&text-metallicBlue)**Jump higher bunny** (only works on Heels)
 4. ![](texture-hud.fastSteps?sprite-tinted&text-metallicBlue)**Go faster bunny** (only works on slow-moving Head)
 
-*> Head Over Heels Manual*`)).toMatchInlineSnapshot(`
+*> Head Over Heels Manual*`),
+  ).toMatchInlineSnapshot(`
   <React.Fragment>
     <h2>
       CUDDLY STUFFED WHITE RABBITS
     </h2>
-    <div
-      className="paragraph"
-    >
+    <p>
       <img
-        alt=""
         src="texture-bunny?float-right"
       />
       The 
@@ -179,10 +158,8 @@ There are four types:
        magically enhance your powers. The status display at the
   bottom of the screen will keep you informed as to which powers are temporarily
   enhanced.
-    </div>
-    <div
-      className="paragraph"
-    >
+    </p>
+    <p>
       If Head and Heels are connected when they pick up a 
       <em>
         Life
@@ -193,16 +170,13 @@ There are four types:
       </em>
       ,
   they will both get the enhanced power.
-    </div>
-    <div
-      className="paragraph"
-    >
+    </p>
+    <p>
       There are four types:
-    </div>
+    </p>
     <ol>
       <li>
         <img
-          alt=""
           src="texture-hud.char.2?sprite-tinted&text-metallicBlue"
         />
         <strong>
@@ -211,7 +185,6 @@ There are four types:
       </li>
       <li>
         <img
-          alt=""
           src="texture-hud.shield?sprite-tinted&text-metallicBlue"
         />
         <strong>
@@ -221,7 +194,6 @@ There are four types:
       </li>
       <li>
         <img
-          alt=""
           src="texture-hud.bigJumps?sprite-tinted&text-metallicBlue"
         />
         <strong>
@@ -231,7 +203,6 @@ There are four types:
       </li>
       <li>
         <img
-          alt=""
           src="texture-hud.fastSteps?sprite-tinted&text-metallicBlue"
         />
         <strong>
@@ -240,19 +211,18 @@ There are four types:
         (only works on slow-moving Head)
       </li>
     </ol>
-    <div
-      className="paragraph"
-    >
+    <p>
       <em>
         &gt; Head Over Heels Manual
       </em>
-    </div>
+    </p>
   </React.Fragment>
 `);
 });
 
-test('swopKey.md', () => {
-    expect(parse(`## SWOP KEY
+test("swopKey.md", () => {
+  expect(
+    parse(`## SWOP KEY
 
 If Head is sitting on Heels, the swop key will, on each push, give you control
 of:
@@ -270,17 +240,16 @@ If Head is not on Heels, the swop key will, on each push, give you control of:
 At all times, the character(s) whose icon is lit is under player control. When
 Head and Heels are joined together, all their abilities are combined.
 
-*> head over heels manual*`)).toMatchInlineSnapshot(`
+*> head over heels manual*`),
+  ).toMatchInlineSnapshot(`
   <React.Fragment>
     <h2>
       SWOP KEY
     </h2>
-    <div
-      className="paragraph"
-    >
+    <p>
       If Head is sitting on Heels, the swop key will, on each push, give you control
   of:
-    </div>
+    </p>
     <ul>
       <li>
         <em>
@@ -307,11 +276,9 @@ Head and Heels are joined together, all their abilities are combined.
         Head + Heels.
       </li>
     </ul>
-    <div
-      className="paragraph"
-    >
+    <p>
       If Head is not on Heels, the swop key will, on each push, give you control of:
-    </div>
+    </p>
     <ul>
       <li>
         <em>
@@ -326,25 +293,22 @@ Head and Heels are joined together, all their abilities are combined.
         Heels.
       </li>
     </ul>
-    <div
-      className="paragraph"
-    >
+    <p>
       At all times, the character(s) whose icon is lit is under player control. When
   Head and Heels are joined together, all their abilities are combined.
-    </div>
-    <div
-      className="paragraph"
-    >
+    </p>
+    <p>
       <em>
         &gt; head over heels manual
       </em>
-    </div>
+    </p>
   </React.Fragment>
-`)
+`);
 });
 
-test('theGame.md', () => {
-  expect(parse(`## THE GAME
+test("theGame.md", () => {
+  expect(
+    parse(`## THE GAME
 
 ![](texture-heels.walking.right.2)![](texture-animated-head.idle.towards?float-right&clear-left)Head and Heels have been captured, separated and imprisoned in the castle
 headquarters of Blacktooth. Their cells contain ‘keep fit’ equipment, including
@@ -367,35 +331,28 @@ that they would have to see all four of the slave planets revolt before the
 Blacktooth crown could cause an uprising. ![](texture-animated-turtle.right)This of course would be the ultimate
 accolade, and unfortunately, almost certain suicide.
 
-*> Head Over Heels Manual*`)).toMatchInlineSnapshot(`
+*> Head Over Heels Manual*`),
+  ).toMatchInlineSnapshot(`
   <React.Fragment>
     <h2>
       THE GAME
     </h2>
-    <div
-      className="paragraph"
-    >
+    <p>
       <img
-        alt=""
         src="texture-heels.walking.right.2"
       />
       <img
-        alt=""
         src="texture-animated-head.idle.towards?float-right&clear-left"
       />
       Head and Heels have been captured, separated and imprisoned in the castle
   headquarters of Blacktooth. Their cells contain ‘keep fit’ equipment, including
   a wall ladder that Head really must learn to climb.
-    </div>
-    <div
-      className="paragraph"
-    >
+    </p>
+    <p>
       <img
-        alt=""
         src="texture-market.wall.fruits.left?bg-pureBlack"
       />
       <img
-        alt=""
         src="texture-moonbase.wall.window2.away?bg-pureBlack&float-right"
       />
        Your job is to get them both
@@ -415,54 +372,44 @@ accolade, and unfortunately, almost certain suicide.
       </em>
        or to be a true hero and teleport to one
   of the slave planets to search for its lost crown!
-    </div>
-    <div
-      className="paragraph"
-    >
+    </p>
+    <p>
       <img
-        alt=""
         src="texture-crown.bookworld"
       />
       To overthrow the dictatorship on any of the slave planets would be a major blow
   to Blacktooth and you could return to Freedom in glory. Of course, Blacktooth
   would probably enslave them again eventually but it would slow down any
   expansion plans for now.
-    </div>
-    <div
-      className="paragraph"
-    >
+    </p>
+    <p>
       <img
-        alt=""
         src="texture-cyberman.towards?float-right&relative&z-topSprite"
       />
       <img
-        alt=""
         src="texture-animated-bubbles.cold?float-right&clear-right&relative&bottom-bottomStackPullup"
       />
       The populace of Blacktooth are so heavily oppressed
   that they would have to see all four of the slave planets revolt before the
   Blacktooth crown could cause an uprising. 
       <img
-        alt=""
         src="texture-animated-turtle.right"
       />
       This of course would be the ultimate
   accolade, and unfortunately, almost certain suicide.
-    </div>
-    <div
-      className="paragraph"
-    >
+    </p>
+    <p>
       <em>
         &gt; Head Over Heels Manual
       </em>
-    </div>
+    </p>
   </React.Fragment>
-`)
-
+`);
 });
 
-test('penitentiary.md', () => {
-  expect(parse(`## PENITENTIARY
+test("penitentiary.md", () => {
+  expect(
+    parse(`## PENITENTIARY
 ### The empire's prison planet
 
 ![](texture-penitentiary.wall.skeleton.left)Millions are imprisoned here. A harsh planet, very mountainous, much climbing,
@@ -471,7 +418,8 @@ skill required.
 The worst place is The Pit, try not to fall into it!
 
 *> Head Over Heels Manual*
-`)).toMatchInlineSnapshot(`
+`),
+  ).toMatchInlineSnapshot(`
   <React.Fragment>
     <h2>
       PENITENTIARY
@@ -479,28 +427,21 @@ The worst place is The Pit, try not to fall into it!
     <h3>
       The empire's prison planet
     </h3>
-    <div
-      className="paragraph"
-    >
+    <p>
       <img
-        alt=""
         src="texture-penitentiary.wall.skeleton.left"
       />
       Millions are imprisoned here. A harsh planet, very mountainous, much climbing,
   skill required.
-    </div>
-    <div
-      className="paragraph"
-    >
+    </p>
+    <p>
       The worst place is The Pit, try not to fall into it!
-    </div>
-    <div
-      className="paragraph"
-    >
+    </p>
+    <p>
       <em>
         &gt; Head Over Heels Manual
       </em>
-    </div>
+    </p>
   </React.Fragment>
 `);
 });

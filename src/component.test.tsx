@@ -37,7 +37,7 @@ test("loads and displays markdown with custom renderers", async () => {
           </h1>
         ),
       }}
-    />
+    />,
   );
 
   // simple test that the component ends up on the screen:
