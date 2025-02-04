@@ -445,3 +445,32 @@ The worst place is The Pit, try not to fall into it!
   </React.Fragment>
 `);
 });
+
+test("analogue control", () => {
+  expect(
+    parse(`**off**: walk in the original 4 directions: *⬅, ➡, ⬆, ⬇*.
+
+controller/joystick with analogue sticks: ’on‘ to walk in any direction, not just along the two axes.
+
+Or, with a keyboard/dpad, ’on‘ allows walking in eight directions. This makes some original rooms easier.`),
+  ).toMatchInlineSnapshot(`
+    <React.Fragment>
+      <p>
+        <strong>
+          off
+        </strong>
+        : walk in the original 4 directions: 
+        <em>
+          ⬅, ➡, ⬆, ⬇
+        </em>
+        .
+      </p>
+      <p>
+        controller/joystick with analogue sticks: ’on‘ to walk in any direction, not just along the two axes.
+      </p>
+      <p>
+        Or, with a keyboard/dpad, ’on‘ allows walking in eight directions. This makes some original rooms easier.
+      </p>
+    </React.Fragment>
+  `);
+});
