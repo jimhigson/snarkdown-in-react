@@ -11,7 +11,7 @@ describe("text formatting", () => {
           <strong>
             like
           </strong>
-          tiny libraries
+           tiny libraries
         </p>
       </React.Fragment>
     `);
@@ -25,7 +25,7 @@ describe("text formatting", () => {
           <strong>
             like
           </strong>
-          tiny libraries
+           tiny libraries
         </p>
       </React.Fragment>
     `);
@@ -39,7 +39,7 @@ describe("text formatting", () => {
           <em>
             like
           </em>
-          tiny libraries
+           tiny libraries
         </p>
       </React.Fragment>
     `);
@@ -58,7 +58,7 @@ describe("text formatting", () => {
             <em>
               tiny
             </em>
-            libraries
+             libraries
           </p>
         </React.Fragment>
       `);
@@ -72,7 +72,7 @@ describe("text formatting", () => {
           <em>
             like
           </em>
-          tiny libraries
+           tiny libraries
         </p>
       </React.Fragment>
     `);
@@ -99,7 +99,7 @@ describe("text formatting", () => {
           <customStrong>
             tiny
           </customStrong>
-          libraries
+           libraries
         </p>
       </React.Fragment>
     `);
@@ -201,7 +201,7 @@ the library is small`),
             <em>
               tiny
             </em>
-            libraries
+             libraries
           </h1>
           <p>
             tiny means small
@@ -228,7 +228,7 @@ the library is small`),
           <em>
             tiny
           </em>
-          libraries
+           libraries
         </h1>
       </React.Fragment>
     `);
@@ -539,7 +539,7 @@ describe("line breaks", () => {
           so
         </p>
         <p>
-          serious?
+          serious? 
         </p>
       </React.Fragment>
     `);
@@ -570,7 +570,7 @@ describe("line breaks", () => {
             <strong>
               line
             </strong>
-            break
+             break
           </p>
         </React.Fragment>
       `);
@@ -771,13 +771,13 @@ describe("code & quotes", () => {
   it("parses a multi-line block quote", () => {
     expect(snarkdown("> To be or not to be\n> well, it's a question innit?"))
       .toMatchInlineSnapshot(`
-				<React.Fragment>
-				  <blockquote>
-				    To be or not to be
-				well, it's a question innit?
-				  </blockquote>
-				</React.Fragment>
-			`);
+        <React.Fragment>
+          <blockquote>
+            To be or not to be
+        well, it's a question innit?
+          </blockquote>
+        </React.Fragment>
+      `);
   });
 
   it("parses lists within block quotes", () => {
@@ -800,7 +800,7 @@ describe("code & quotes", () => {
             </ul>
           </blockquote>
           <p>
-            hello
+             hello
           </p>
         </React.Fragment>
       `);
@@ -823,7 +823,7 @@ describe("code & quotes", () => {
           <em>
             nothing
           </em>
-          can be changed until it is faced.
+           can be changed until it is faced.
         </blockquote>
       </React.Fragment>
     `);

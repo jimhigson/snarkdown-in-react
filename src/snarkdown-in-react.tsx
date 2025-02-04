@@ -53,6 +53,15 @@ const isBlockLevel = (node: ASTNode | string | undefined) => {
   );
 };
 
+/** 
+ * trims string s, but if there is whitespace at the start or end, leave a single 
+ * space in place of multiple whitespace chars
+ */
+const trimReduce = (s: string) => {
+
+  return s.replace(/^\s+|\s+$/g, ' ');
+};
+
 /**
  * because react elements (created with React.createElement) are immutable, use
  * a different representation that we can modify in-place. Converted to real
@@ -130,12 +139,12 @@ export const parseImpl = (md: string, isTopLevel = false): ASTNode => {
     if (prev !== "") {
       if (currentNode === rootNode && isTopLevel) {
         // if we're at the root node, we can't add text directly to it, so create a paragraph:
-        const p = createAstNode("p", prev);
+        const p = createAstNode("p", trimReduce(prev));
         rootNode.c.push(p);
         contextPath = [rootNode, p];
         currentNode = p;
       } else {
-        currentNode.c.push(prev);
+        currentNode.c.push(trimReduce(prev));
       }
     }
 
@@ -151,7 +160,7 @@ export const parseImpl = (md: string, isTopLevel = false): ASTNode => {
         "pre",
         token[4] ?
           outdent(token[4])
-        : createAstNode(
+          : createAstNode(
             "code",
             outdent(token[3]),
             token[2] ? { language: `language-${token[2].toLowerCase()}` } : {},
@@ -171,8 +180,8 @@ export const parseImpl = (md: string, isTopLevel = false): ASTNode => {
       const listTag =
         isList ?
           isNumbered ? "ol"
-          : "ul"
-        : "blockquote";
+            : "ul"
+          : "blockquote";
 
       const lines = token[5]
         .split("\n")
@@ -184,7 +193,7 @@ export const parseImpl = (md: string, isTopLevel = false): ASTNode => {
         isList ?
           lines.map((mdLine) => createAstNode("li", parseImpl(mdLine).c))
           // blockquotes can have lists inside them, so parse again with the > removed, as a single string:
-        : parseImpl(lines.join("\n")).c,
+          : parseImpl(lines.join("\n")).c,
       );
       rootNode.c.push(listEle);
       contextPath = [rootNode, listEle];
@@ -294,7 +303,7 @@ export const parseImpl = (md: string, isTopLevel = false): ASTNode => {
 
   // push the text after all token - either to the root node or the last paragraph:
   // v- if there is any more text left to push:
-  const remaining = md.substring(last).trim();
+  const remaining = trimReduce(md.substring(last));
   if (remaining.length) {
     const lastChildOfRoot = rootNode.c.at(-1);
     let insertTo: ASTNode;
@@ -331,13 +340,13 @@ export const parse = (
     const Component = (
       n.t === "" ?
         Fragment
-      : components[n.t]) as FunctionComponent<PropsWithChildren<any>>;
+        : components[n.t]) as FunctionComponent<PropsWithChildren<any>>;
 
     return (
       <Component {...n.p} key={i}>
         {n.c.length === 0 ?
           undefined
-        : n.c.map((c, i) => (typeof c === "string" ? c : convert(c, i)))}
+          : n.c.map((c, i) => (typeof c === "string" ? c : convert(c, i)))}
       </Component>
     );
   };
