@@ -475,3 +475,43 @@ Or, with a keyboard/dpad, ’on‘ allows walking in eight directions. This make
     </React.Fragment>
   `);
 });
+
+test("crashMessage", () => {
+  expect(parse(`##The game crashed
+If you want to help, please
+
+* open an [issue on github](https://github.com/jimhigson/head-over-heels-online/issues)
+* email to [jim@blockstack.ing](mailto:jim@blockstack.ing)
+
+Include the information below, and a description of what you were doing`)).toMatchInlineSnapshot(`
+  <React.Fragment>
+    <h2>
+      The game crashed
+    </h2>
+    <p>
+      If you want to help, please
+    </p>
+    <ul>
+      <li>
+        open an 
+        <a
+          href="https://github.com/jimhigson/head-over-heels-online/issues"
+        >
+          issue on github
+        </a>
+      </li>
+      <li>
+        email to 
+        <a
+          href="mailto:jim@blockstack.ing"
+        >
+          jim@blockstack.ing
+        </a>
+      </li>
+    </ul>
+    <p>
+      Include the information below, and a description of what you were doing
+    </p>
+  </React.Fragment>
+`);
+});
