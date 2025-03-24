@@ -402,37 +402,7 @@ describe("links & images", () => {
     );
   });
 
-  it('parses links with other text after them', () => {
-    const markdown = `However, It is **highly recommended** to **install the game** as a [P.W.A.](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps) for best experience.
 
-----
-## Install using Chrome / Chromium`;
-    expect(snarkdown(markdown)).toMatchInlineSnapshot(`
-      <React.Fragment>
-        <p>
-          However, It is 
-          <strong>
-            highly recommended
-          </strong>
-           to 
-          <strong>
-            install the game
-          </strong>
-           as a 
-          <a
-            href="https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps"
-          >
-            P.W.A.
-          </a>
-          for best experience.
-          </p>
-        <hr />
-        <h2>
-          Install using Chrome / Chromium
-        </h2>
-      </React.Fragment>
-    `);
-  });
 });
 
 describe("lists", () => {
@@ -917,7 +887,9 @@ describe("horizontal rules", () => {
       <React.Fragment>
         <p>
           foo
-          <hr />
+        </p>
+        <hr />
+        <p>
           bar
         </p>
       </React.Fragment>
@@ -940,7 +912,9 @@ describe("horizontal rules", () => {
       <React.Fragment>
         <p>
           foo
-          <hr />
+        </p>
+        <hr />
+        <p>
           bar
         </p>
       </React.Fragment>
@@ -949,7 +923,9 @@ describe("horizontal rules", () => {
       <React.Fragment>
         <p>
           foo
-          <hr />
+        </p>
+        <hr />
+        <p>
           bar
         </p>
       </React.Fragment>

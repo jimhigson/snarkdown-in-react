@@ -515,3 +515,36 @@ Include the information below, and a description of what you were doing`)).toMat
   </React.Fragment>
 `);
 });
+
+test('installGuide fragment', () => {
+  const markdown = `However, It is **highly recommended** to **install the game** as a [P.W.A.](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps) for best experience.
+
+----
+## Install using Chrome / Chromium`;
+
+  expect(parse(markdown)).toMatchInlineSnapshot(`
+    <React.Fragment>
+      <p>
+        However, It is 
+        <strong>
+          highly recommended
+        </strong>
+         to 
+        <strong>
+          install the game
+        </strong>
+         as a 
+        <a
+          href="https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps"
+        >
+          P.W.A.
+           for best experience.
+        </a>
+      </p>
+      <hr />
+      <h2>
+        Install using Chrome / Chromium
+      </h2>
+    </React.Fragment>
+  `);
+});

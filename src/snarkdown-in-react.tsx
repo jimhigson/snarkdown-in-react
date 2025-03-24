@@ -288,7 +288,9 @@ export const parseImpl = (md: string, isTopLevel = false): ASTNode => {
     }
     // token[1] is horizontal rule \n\n---\n
     else if (token[1]) {
-      pushNode(createAstNode("hr"), false);
+      rootNode.c.push(createAstNode("hr"));
+      contextPath = [rootNode];
+      currentNode = rootNode;
     } else if (token[17]) {
       /** token[17] is *, **, _, __ for strong/em */
       const tag = token[17].length === 2 ? "strong" : "em";
