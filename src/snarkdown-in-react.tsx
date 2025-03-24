@@ -186,7 +186,8 @@ export const parseImpl = (md: string, isTopLevel = false): ASTNode => {
       const lines = token[5]
         .split("\n")
         // remove bullets
-        .map((l) => l.replace(/^(\*|-|\+|>|\d+\.)\s+/, ""));
+        .map((l) => l.replace(/^(\*|-|\+|>|\d+\.)\s+/, ""))
+        .filter((l) => l.trim() !== "");
       // note that ul/ol can only be direct children of the root node:
       const listEle = createAstNode(
         listTag,

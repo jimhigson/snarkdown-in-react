@@ -515,7 +515,7 @@ describe("lists", () => {
 
   it("detects ul after a paragraph without a line gap", () => {
     expect(snarkdown(`please:
-* email me
+* email me 
 * call me
 * write to me`)).toMatchInlineSnapshot(`
   <React.Fragment>
@@ -524,7 +524,7 @@ describe("lists", () => {
     </p>
     <ul>
       <li>
-        email me
+        email me 
       </li>
       <li>
         call me
